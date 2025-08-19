@@ -1,27 +1,43 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
-export default function ThankYouPage() {
+export default function WearableAuthSuccessPage() {
   const router = useRouter()
+  const [isOpener, setIsOpener] = useState(false)
+  const [isClient, setIsClient] = useState(false)
 
   useEffect(() => {
-    // If this page is opened in a new tab (from OAuth callback)
-    // Send a message to the opener and close this tab
+    // Mark that we're on the client side
+    setIsClient(true)
+    
+    // Check if this page is opened in a new tab (from OAuth callback)
     if (window.opener) {
+      setIsOpener(true)
+      
       // Send success message to the original tab
       window.opener.postMessage({ type: 'AUTH_SUCCESS' }, window.location.origin)
       
-      // Close this tab after a short delay
-      setTimeout(() => {
-        window.close()
-      }, 500)
     }
   }, [])
 
+  // Show loading state while determining if we're in a popup
+  if (!isClient) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8 text-center">
+          <div className="mb-4">
+            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600 mx-auto"></div>
+          </div>
+          <div className="text-sm text-gray-500">Loading...</div>
+        </div>
+      </div>
+    )
+  }
+
   // If opened in a new tab, show closing message
-  if (window.opener) {
+  if (isOpener) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8 text-center">
@@ -93,20 +109,16 @@ export default function ThankYouPage() {
         </p>
         
         <div className="text-sm text-gray-500 mb-4">
-          {window.opener ? 'Closing tab and redirecting to main app...' : 'Authorization completed successfully!'}
+          Authorization completed successfully!
         </div>
         
         <button
           onClick={() => {
-            if (window.opener) {
-              window.close()
-            } else {
-              router.push('/dashboard')
-            }
+            router.push('/dashboard')
           }}
           className="mt-4 w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"
         >
-          {window.opener ? 'Close Tab' : 'Go to Dashboard'}
+          Go to Dashboard
         </button>
       </div>
     </div>

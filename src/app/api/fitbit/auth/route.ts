@@ -33,6 +33,14 @@ export async function GET(request: Request) {
   const state = base64UrlEncode(crypto.randomBytes(16))
   const { verifier, challenge } = generateVerifierAndChallenge()
 
+  // Debug logging
+  console.log('Fitbit auth initiated:', { 
+    hasState: !!state, 
+    hasVerifier: !!verifier, 
+    hasChallenge: !!challenge,
+    redirectUri 
+  })
+
   // Build Fitbit authorization URL with PKCE
   const authUrl = new URL('https://www.fitbit.com/oauth2/authorize')
   authUrl.searchParams.set('client_id', clientId)
@@ -41,6 +49,7 @@ export async function GET(request: Request) {
   authUrl.searchParams.set('code_challenge_method', 'S256')
   authUrl.searchParams.set('scope', scope)
   authUrl.searchParams.set('redirect_uri', redirectUri)
+  authUrl.searchParams.set('state', state)
 
   const res = NextResponse.redirect(authUrl.toString())
 

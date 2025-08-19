@@ -16,7 +16,7 @@ export default function AuthListener() {
       // Check if the message is an authentication success
       if (event.data && event.data.type === 'AUTH_SUCCESS') {
         // Navigate to the thank you page
-        router.push('/thank-you')
+        router.push('/wearable-auth-success')
       }
     }
 

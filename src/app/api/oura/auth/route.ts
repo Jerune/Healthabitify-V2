@@ -51,6 +51,7 @@ export async function GET(request: Request) {
     maxAge: 10 * 60,
     path: '/',
   })
+  
   res.cookies.set('oura_pkce_verifier', verifier, {
     httpOnly: true,
     secure: true,
