@@ -5,20 +5,21 @@ import MainContent from '../../../components/MainContent'
 // import buildColumns from '../../../features/DataGrid/buildColumns'
 import TimeSelectionModule from '../../../features/TimesDatesModule/TimeSelectionModule'
 import Tabs from '../../../data/tabs'
-import { Params } from 'next/dist/server/request/params'
+
 // import buildRows from '../../../features/DataGrid/buildRows'
 // import Loading from '../../../components/Loading'
 // import type { Column, Row } from '../../../features/_types'
 
-function DataPage({ params } : {params: Params}) {
-    const { category } = params
+async function DataPage({ params }: { params: Promise<{ category?: string[] }> }) {
+    const resolvedParams = await params
+    const { category } = resolvedParams
     // const allMetrics = useAppSelector((state) => state.metrics)
     // const allAverages = useAppSelector((state) => state.averages)
     // const isLoading = useAppSelector((state) => state.utils.isLoading)
     // const activeTimeView = useAppSelector((state) => state.utils.activeTimeView)
     // const [activeColumns, setActiveColumns] = useState<Column[]>([])
     // const [activeRows, setActiveRows] = useState<Row[]>([])
-    const title = category as string || 'Title'
+    const title = category ? category.join('/') : 'Title'
 
     // useEffect(() => {
     //     async function setDataGrid() {
