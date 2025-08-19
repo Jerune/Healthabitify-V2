@@ -151,7 +151,7 @@ input:required:invalid {
   background: rgb(0, 0, 0, 70%);
 }
 
-/* React Date Picker Rewrites */
+/* React Date Picker CSS Rewrites */
 
 .react-date-picker__wrapper {
   border: none !important;
