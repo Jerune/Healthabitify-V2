@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { doc, updateDoc, serverTimestamp } from 'firebase/firestore'
 import { db } from '../../firebase'
 import { DataPoint } from '../../../features/_types'

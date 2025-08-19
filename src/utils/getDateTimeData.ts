@@ -1,4 +1,4 @@
-import { DateTime, Info } from 'luxon'
+import { DateTime } from 'luxon'
 
 function getDateTimeDataForDatapoints(date: string) {
     const currentDate = DateTime.fromISO(date)

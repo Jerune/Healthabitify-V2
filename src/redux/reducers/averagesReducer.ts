@@ -14,15 +14,11 @@ export const averagesSlice = createSlice({
         initAverages: (state, action) => {
             return action.payload
         },
-        updateAverages: (state, action) => {
-            const { id, value } = action.payload
-            return state
-        },
         default: (state) => {
             return state
         },
     },
 })
 
-export const { initAverages, updateAverages } = averagesSlice.actions
+export const { initAverages } = averagesSlice.actions
 export default averagesSlice.reducer

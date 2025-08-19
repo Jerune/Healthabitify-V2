@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from '../redux/reduxHooks'
 import { changeLoadingStatus } from '../redux/reducers/utilsReducer'

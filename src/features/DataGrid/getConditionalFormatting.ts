@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import { CellProps } from '@inovua/reactdatagrid-community/types'
 import metricsWithZeroValues from '../../data/metrics/metricsWithZeroValues'
 import metricsWithStringOutput from '../../data/metrics/metricsWithStringOutput'

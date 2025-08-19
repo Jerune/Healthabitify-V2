@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { doc, getDoc } from 'firebase/firestore'
 import { db } from '../../firebase'
 

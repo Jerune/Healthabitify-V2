@@ -52,7 +52,6 @@ export async function GET(req: Request) {
   const accessToken = tokenJson.access_token as string
 
   const res = NextResponse.redirect(new URL('/', req.url))
-  const isProd = process.env.NODE_ENV === 'production' || (process.env.OURA_REDIRECT_URI || '').startsWith('https://')
   res.cookies.set('oura_access_token', accessToken, {
     httpOnly: true,
     secure: true,

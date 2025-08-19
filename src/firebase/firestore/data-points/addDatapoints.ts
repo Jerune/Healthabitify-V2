@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { collection, addDoc } from 'firebase/firestore'
 import { DateTime } from 'luxon'
 import type { DataPoint } from '../../../types'

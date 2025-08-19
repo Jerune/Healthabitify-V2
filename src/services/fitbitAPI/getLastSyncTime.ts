@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 async function getLastSyncTime(token: string) {
     // API related Data
     const headers = {

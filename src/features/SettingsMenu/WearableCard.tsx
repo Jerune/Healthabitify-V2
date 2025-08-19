@@ -1,7 +1,7 @@
 import { useAppSelector } from '../../redux/reduxHooks'
 import { Device } from '../../types'
 import { AuthenticationButton, WearableCardProps } from '../_types'
-import { FitbitButton, GoogleSheetsButton, OuraButton } from './Wearables'
+import { FitbitButton, OuraButton } from './Wearables'
 
 function WearableCard({ activeCategory }: WearableCardProps) {
     const devices: Device = useAppSelector((state) => state.user.devices)

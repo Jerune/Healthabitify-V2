@@ -1,4 +1,4 @@
-/* eslint-disable no-useless-escape */
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from 'react'
 import type { Metric, MetricProps } from '../../types'
 import type { InputEvent, SelectEvent, FormSubmit } from '../../types.js'
@@ -45,7 +45,6 @@ function MetricCard({ metric }: MetricProps) {
                 break
             case 'duration':
                 setInputValidationData({
-                    // eslint-disable-next-line prettier/prettier
                     regEx: '^([0-9][0-9]):([0-5][0-9])$',
                     placeholder: 'ex. 01:10',
                     typeReference: 'duration in the HH:MM format',
@@ -69,7 +68,6 @@ function MetricCard({ metric }: MetricProps) {
 
         if (metricsInMilliseconds.includes(metric.id)) {
             setInputValidationData({
-                // eslint-disable-next-line prettier/prettier
                 regEx: '^([0-9][0-9]):([0-5][0-9])$',
                 placeholder: 'ex. 01:10',
                 typeReference: 'duration in the HH:MM format',

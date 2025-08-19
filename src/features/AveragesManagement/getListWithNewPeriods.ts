@@ -1,4 +1,3 @@
-/* eslint-disable no-await-in-loop */
 import averageExistsInDatabase from '../../firebase/firestore/averages/averageExistsInDatabase'
 import { Period } from '../_types'
 

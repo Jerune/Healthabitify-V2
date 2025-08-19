@@ -1,6 +1,5 @@
 import { CellProps } from '@inovua/reactdatagrid-community/types'
 
-/* eslint-disable no-param-reassign */
 const columnsMock = [
     { name: 'date', header: 'Date' },
     {

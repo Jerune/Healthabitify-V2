@@ -2,7 +2,7 @@
 
 import { signInWithEmailAndPassword } from 'firebase/auth'
 import { useState, useRef, useEffect } from 'react'
-import { useAppDispatch, useAppSelector } from '../redux/reduxHooks'
+import { useAppDispatch } from '../redux/reduxHooks'
 import { auth } from '../firebase/firebase'
 import { localSignIn } from '../redux/reducers/usersReducer'
 import type { InputEvent, FormSubmit, SignInData } from '../types'
@@ -17,7 +17,6 @@ import Image from 'next/image'
 function Login() {
     const router = useRouter()
     const dispatch = useAppDispatch()
-    const isLoggedIn = useAppSelector((state) => state.user.isLoggedIn)
     const rememberCheckbox = useRef<HTMLInputElement>(null)
     const [emailInLocalStorage, setEmailInLocalStorage] = useState<string | null>(null)
     const [errorIsShowing, setErrorIsShowing] = useState(false)

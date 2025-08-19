@@ -94,7 +94,6 @@ export default async function getApiData(
                 const responseData = await response.json()
                 return responseData
             } catch (error) {
-                // eslint-disable-next-line no-console
                 console.log(error)
                 return 'error'
             }

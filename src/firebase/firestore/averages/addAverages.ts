@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { doc, setDoc } from 'firebase/firestore'
 import { AveragesReturn } from '../../../features/_types'
 import { db } from '../../firebase'

@@ -3,7 +3,6 @@ import adjustValueOutput from '../DataOutputManagement/adjustValueOutput'
 import forceNumberReturn from '../../utils/forceNumberReturn'
 import { DashboardMetricProps } from '../_types'
 import Icon from '../../components/icon'
-import metricsWithStringOutput from '../../data/metrics/metricsWithStringOutput'
 import metricsWithZeroValues from '../../data/metrics/metricsWithZeroValues'
 
 export default function Difference({ metric }: DashboardMetricProps) {

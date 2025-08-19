@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { doc, setDoc } from 'firebase/firestore'
 import { db } from '../../firebase'
 import type { User } from '../../../types'

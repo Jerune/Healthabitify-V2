@@ -1,4 +1,3 @@
-/* eslint-disable no-await-in-loop */
 import getMonthlyYearlyAverages from '../../firebase/firestore/averages/getMonthlyYearlyAverages'
 import getWeeklyAverages from '../../firebase/firestore/averages/getWeeklyAverages'
 import { Averages, AveragesData, PeriodForAverage } from '../_types'
