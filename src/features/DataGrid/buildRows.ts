@@ -1,32 +1,33 @@
-import { Metric } from '../../types'
-import { AveragesData } from '../_types'
-import getMonthlyRowData from './getMonthlyRowData'
-import getWeeklyRowData from './getWeeklyRowData'
-import getYearlyRowData from './getYearlyRowData'
+import { Metric } from '../../types';
+import { AveragesData } from '../_types';
+
+import getMonthlyRowData from './getMonthlyRowData';
+import getWeeklyRowData from './getWeeklyRowData';
+import getYearlyRowData from './getYearlyRowData';
 
 function buildRows(
-    metrics: Metric[],
-    activeTimeView: string,
-    allAverages: AveragesData
+  metrics: Metric[],
+  activeTimeView: string,
+  allAverages: AveragesData
 ) {
-    let rows = []
+  let rows = [];
 
-    switch (activeTimeView) {
-        case 'week':
-            rows = getWeeklyRowData(metrics, allAverages)
-            break
-        case 'month':
-            rows = getMonthlyRowData(metrics, allAverages)
-            break
-        case 'year':
-            rows = getYearlyRowData(metrics, allAverages)
-            break
-        default:
-            rows = getWeeklyRowData(metrics, allAverages)
-            break
-    }
+  switch (activeTimeView) {
+    case 'week':
+      rows = getWeeklyRowData(metrics, allAverages);
+      break;
+    case 'month':
+      rows = getMonthlyRowData(metrics, allAverages);
+      break;
+    case 'year':
+      rows = getYearlyRowData(metrics, allAverages);
+      break;
+    default:
+      rows = getWeeklyRowData(metrics, allAverages);
+      break;
+  }
 
-    return rows
+  return rows;
 }
 
-export default buildRows
+export default buildRows;

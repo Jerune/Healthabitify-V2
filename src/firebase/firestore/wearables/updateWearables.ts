@@ -1,14 +1,15 @@
-import { doc, updateDoc } from 'firebase/firestore'
-import { db } from '../../firebase'
+import { doc, updateDoc } from 'firebase/firestore';
+
+import { db } from '../../firebase';
 
 export default async function updateWearables(
-    source: string,
-    key: string,
-    value: string
+  source: string,
+  key: string,
+  value: string
 ) {
-    const metricRef = doc(db, 'wearables', source)
+  const metricRef = doc(db, 'wearables', source);
 
-    await updateDoc(metricRef, {
-        [key]: value,
-    })
+  await updateDoc(metricRef, {
+    [key]: value,
+  });
 }

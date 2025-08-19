@@ -1,13 +1,13 @@
-import { capitalizeFirstLetterFromArray } from './capitalizeFirstLetter'
+import { capitalizeFirstLetterFromArray } from './capitalizeFirstLetter';
 
 function kebabcaseToCamelcase(word: string) {
-    const kebabcaseWord = word
-    const wordsArray = kebabcaseWord.split('-')
-    const wordsWithCapital = capitalizeFirstLetterFromArray(wordsArray)
-        .split(' ')
-        .join('')
+  const kebabcaseWord = word;
+  const wordsArray = kebabcaseWord.split('-');
+  const wordsWithCapital = capitalizeFirstLetterFromArray(wordsArray)
+    .split(' ')
+    .join('');
 
-    return wordsWithCapital
+  return wordsWithCapital;
 }
 
-export default kebabcaseToCamelcase
+export default kebabcaseToCamelcase;

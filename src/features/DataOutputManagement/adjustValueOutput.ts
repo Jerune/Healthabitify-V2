@@ -1,41 +1,45 @@
-import convertMillisecondsToTime from '../../utils/convertMillisecondsToTime'
-import { Metric } from '../../types'
-import addDecimals from './addDecimals'
-import forceNumberReturn from '../../utils/forceNumberReturn'
-import metricsInMilliseconds from '../../data/metrics/metricsInMilliseconds'
-import metricsWithZeroValues from '../../data/metrics/metricsWithZeroValues'
+import metricsInMilliseconds from '../../data/metrics/metricsInMilliseconds';
+import metricsWithZeroValues from '../../data/metrics/metricsWithZeroValues';
+import { Metric } from '../../types';
+import convertMillisecondsToTime from '../../utils/convertMillisecondsToTime';
+import forceNumberReturn from '../../utils/forceNumberReturn';
+
+import addDecimals from './addDecimals';
 
 export default function adjustValueOutput(
-    metric: Metric,
-    value: number | string
+  metric: Metric,
+  value: number | string
 ): string {
-    
-    // Return string value in case value is 0 or 00:00:00
-    if (!metricsWithZeroValues.includes(metric.id) && value === 0 || value === '0' || value === undefined){
-        return '---'
-    }
-    
-    // Change to h:mm format as string in case id is part sleepMetricIdsWithMilliseconds
-    if (metricsInMilliseconds.includes(metric.id)) {
-        return convertMillisecondsToTime(Number(value))
-    }
+  // Return string value in case value is 0 or 00:00:00
+  if (
+    (!metricsWithZeroValues.includes(metric.id) && value === 0) ||
+    value === '0' ||
+    value === undefined
+  ) {
+    return '---';
+  }
 
-    // Change to hours or minutes format as string in case of time or duration
-    if (metric.dataType === 'time' || metric.dataType === 'duration') {
-        const amountOfMinutes = forceNumberReturn(value) * 60
-        const hours = Math.floor(amountOfMinutes / 60)
-        const minutes = Math.round(amountOfMinutes - hours * 60)
-        const hoursAsString = String(hours).padStart(2, '0')
-        const minutesAsString = String(minutes).padStart(2, '0')
+  // Change to h:mm format as string in case id is part sleepMetricIdsWithMilliseconds
+  if (metricsInMilliseconds.includes(metric.id)) {
+    return convertMillisecondsToTime(Number(value));
+  }
 
-        return `${hoursAsString}:${minutesAsString}`
-    }
+  // Change to hours or minutes format as string in case of time or duration
+  if (metric.dataType === 'time' || metric.dataType === 'duration') {
+    const amountOfMinutes = forceNumberReturn(value) * 60;
+    const hours = Math.floor(amountOfMinutes / 60);
+    const minutes = Math.round(amountOfMinutes - hours * 60);
+    const hoursAsString = String(hours).padStart(2, '0');
+    const minutesAsString = String(minutes).padStart(2, '0');
 
-    if (metric === null) {
-        return 'null'
-    }
+    return `${hoursAsString}:${minutesAsString}`;
+  }
 
-    // Adapt to output & Change to String without any adjustments
-    const adaptedValue = addDecimals(metric, value)
-    return adaptedValue.toString()
+  if (metric === null) {
+    return 'null';
+  }
+
+  // Adapt to output & Change to String without any adjustments
+  const adaptedValue = addDecimals(metric, value);
+  return adaptedValue.toString();
 }

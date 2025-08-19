@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 :root {
   --background: #ffffff;
@@ -8,7 +8,7 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: "Nunito", var(--font-geist-sans);
+  --font-sans: 'Nunito', var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   /* Aliases for primary (blue) and secondary (slate) color scales */
   --color-primary-50: var(--color-blue-50);
@@ -36,11 +36,11 @@
   --color-secondary-950: var(--color-slate-950);
 
   /* Custom palette tokens */
-  --color-palette-100: #E63946;
-  --color-palette-200: #F1FAEE;
-  --color-palette-300: #A8DADC;
-  --color-palette-400: #457B9D;
-  --color-palette-500: #1D3557;
+  --color-palette-100: #e63946;
+  --color-palette-200: #f1faee;
+  --color-palette-300: #a8dadc;
+  --color-palette-400: #457b9d;
+  --color-palette-500: #1d3557;
   --color-palette-600: #030325;
 }
 
@@ -61,12 +61,12 @@ body {
 
 @keyframes slide-in-update-message {
   0% {
-      transform: translateY(-100px);
+    transform: translateY(-100px);
   }
 
   20%,
   100% {
-      transform: translateY(0);
+    transform: translateY(0);
   }
 }
 
@@ -101,7 +101,10 @@ p {
   font-family: var(--font-nunito-sans), system-ui, sans-serif;
 }
 
-button, input, textarea, select {
+button,
+input,
+textarea,
+select {
   font-family: var(--font-nunito-sans), system-ui, sans-serif;
 }
 
@@ -123,27 +126,27 @@ input:required:invalid {
 .green-gradient {
   background: rgb(185, 247, 182);
   background: linear-gradient(
-      0deg,
-      rgba(185, 247, 182, 80%) 0%,
-      rgba(43, 250, 0, 80%) 100%
+    0deg,
+    rgba(185, 247, 182, 80%) 0%,
+    rgba(43, 250, 0, 80%) 100%
   );
 }
 
 .orange-gradient {
   background: rgb(247, 224, 176);
   background: linear-gradient(
-      0deg,
-      rgba(247, 224, 176, 80%) 0%,
-      rgba(247, 136, 1, 80%) 100%
+    0deg,
+    rgba(247, 224, 176, 80%) 0%,
+    rgba(247, 136, 1, 80%) 100%
   );
 }
 
 .red-gradient {
   background: rgb(250, 184, 184);
   background: linear-gradient(
-      0deg,
-      rgba(250, 184, 184, 80%) 0%,
-      rgba(251, 62, 1, 80%) 100%
+    0deg,
+    rgba(250, 184, 184, 80%) 0%,
+    rgba(251, 62, 1, 80%) 100%
   );
 }
 
@@ -160,4 +163,3 @@ input:required:invalid {
 .react-date-picker__inputGroup {
   display: none !important;
 }
-
