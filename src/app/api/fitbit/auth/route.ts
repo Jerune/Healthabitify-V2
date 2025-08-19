@@ -1,6 +1,8 @@
 import crypto from 'node:crypto'
 import { NextResponse } from 'next/server'
 
+export const runtime = 'nodejs'
+
 function base64UrlEncode(buffer: Buffer) {
   return buffer
     .toString('base64')
