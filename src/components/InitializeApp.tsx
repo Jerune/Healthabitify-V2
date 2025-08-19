@@ -64,8 +64,10 @@ function AppStateInit() {
         const wearablesList = await getWearables()
         // Returns list of wearable data or error message
         if (typeof wearablesList !== 'string') {
+            console.log('Wearables loaded from Firebase:', wearablesList)
             dispatch(setDevices(wearablesList))
         } else {
+            console.error('Failed to load wearables:', wearablesList)
             toast.error(wearablesList)
         }
     }
@@ -117,7 +119,13 @@ function AppStateInit() {
                     )
             }
         }
-        if (devices.oura.lastUpdated <= yesterdayString) {
+                if (devices.oura.lastUpdated <= yesterdayString) {
+            console.log('Oura data loading condition met:', {
+                lastUpdated: devices.oura.lastUpdated,
+                yesterdayString,
+                condition: devices.oura.lastUpdated <= yesterdayString
+            })
+            
             dispatch(changeLoadingMessage('Gathering Oura Data'))
 
             const ouraDataFromAPI = (await getApiData(
@@ -126,27 +134,43 @@ function AppStateInit() {
                 devices.oura.lastUpdated
             )) as OuraRawData
 
+            console.log('Oura API response:', ouraDataFromAPI)
+
             if (typeof ouraDataFromAPI[0] !== 'string') {
+                console.log('Oura data transformation starting...')
                 dispatch(changeLoadingMessage('Transforming Oura data'))
                 const newOuraDatapoints = await transformOuraData(
                     ouraDataFromAPI
                 )
+                console.log('Transformed Oura datapoints:', newOuraDatapoints)
+                
                 if (newOuraDatapoints.length > 0) {
+                    console.log('Adding Oura datapoints to database...')
                     const amountOfNewDatapoints = await addDatapoints(
                         newOuraDatapoints
                     )
+                    console.log('Oura datapoints added:', amountOfNewDatapoints)
                     
-                        toast.success(
-                            `${amountOfNewDatapoints} new Oura datapoints have been added`
-                        )
-                 
+                    toast.success(
+                        `${amountOfNewDatapoints} new Oura datapoints have been added`
+                    )
+                } else {
+                    console.log('No new Oura datapoints to add')
                 }
             } else if (ouraDataFromAPI[0] === 'error') {
-        
-                    toast.error(
-                        'An error occured while getting the Oura Data, please try again later'
-                    )
+                console.error('Oura API returned error:', ouraDataFromAPI)
+                toast.error(
+                    'An error occured while getting the Oura Data, please try again later'
+                )
+            } else {
+                console.log('Oura API response type:', typeof ouraDataFromAPI[0], ouraDataFromAPI[0])
             }
+        } else {
+            console.log('Oura data loading condition NOT met:', {
+                lastUpdated: devices.oura.lastUpdated,
+                yesterdayString,
+                condition: devices.oura.lastUpdated <= yesterdayString
+            })
         }
     }
 
@@ -197,6 +221,7 @@ function AppStateInit() {
     }
 
     async function updateData() {
+        console.log('updateData function called')
         dispatch(changeLoadingStatus(true))
         await initializeServiceAPIs()
         await initializeWearables()
