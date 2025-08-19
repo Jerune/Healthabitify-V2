@@ -1,16 +1,10 @@
-import { Params } from 'next/dist/server/request/params'
-
 export async function GET(
   req: Request,
-  { params }: { params: Params }
+  { params }: { params: Promise<{ path: string[] }> }
 ) {
-  const path = params.path
-  if (!path || !Array.isArray(path)) {
-    return new Response('Invalid path parameter', { status: 400 })
-  }
-  
+  const resolvedParams = await params
   const upstreamUrl = new URL(
-    `https://api.fitbit.com/1/${path.join("/")}${
+    `https://api.fitbit.com/1/${resolvedParams.path.join("/")}${
       new URL(req.url).search
     }`
   )
