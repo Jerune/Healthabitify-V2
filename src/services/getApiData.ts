@@ -12,7 +12,7 @@ export default async function getApiData(
     source: string,
     token: string,
     lastUpdated: string
-): Promise<OuraRawData | FitbitRawData[] | string> {
+): Promise<OuraRawData[] | FitbitRawData[] | string> {
     if (source !== 'oura' && source !== 'fitbit') {
         return 'error'
     }

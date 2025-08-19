@@ -133,7 +133,7 @@ function AppStateInit() {
                 'oura',
                 devices.oura.token,
                 devices.oura.lastUpdated
-            )) as OuraRawData
+            )) as OuraRawData[]
 
             console.log('Oura API response:', ouraDataFromAPI)
 
@@ -146,10 +146,10 @@ function AppStateInit() {
                 // Check if this is batched data (multiple monthly responses)
                 if (Array.isArray(ouraDataFromAPI) && ouraDataFromAPI.length > 1) {
                     console.log('Processing batched Oura data (monthly responses)')
-                    newOuraDatapoints = await transformBatchedOuraData(ouraDataFromAPI as unknown as OuraRawData[])
+                    newOuraDatapoints = await transformBatchedOuraData(ouraDataFromAPI)
                 } else {
                     console.log('Processing single Oura data response')
-                    newOuraDatapoints = await transformOuraData(ouraDataFromAPI)
+                    newOuraDatapoints = await transformOuraData(ouraDataFromAPI[0])
                 }
                 
                 console.log('Transformed Oura datapoints:', newOuraDatapoints)

@@ -15,11 +15,6 @@ export default async function transformBatchedOuraData(
     for (let i = 0; i < ouraRawData.length; i++) {
         const batch = ouraRawData[i]
         
-        if (batch === 'error') {
-            console.error(`Batch ${i} returned error, skipping...`)
-            continue
-        }
-        
         try {
             console.log(`Processing batch ${i + 1}/${ouraRawData.length}`)
             const batchDatapoints = await transformOuraData(batch)

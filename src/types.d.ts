@@ -162,12 +162,11 @@ export type OuraDailySummary = {
     type: string
 }
 
-export type OuraRawData = [
-    {
+export type OuraRawData = {
         data: OuraDailySummary[]
         next_token: null | string
     }
-]
+
 
 // getApiData
 

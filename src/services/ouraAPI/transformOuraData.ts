@@ -7,7 +7,7 @@ export default async function transformOuraData(
 ): Promise<DataPoint[]> {
     const datapointsToAdd: DataPoint[] = []
     const source = 'oura'
-    const longSleepData = ouraRawData[0].data.filter(
+    const longSleepData = ouraRawData.data.filter(
         (resource) => resource.type === 'long_sleep'
     )
 
