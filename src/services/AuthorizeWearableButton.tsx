@@ -18,11 +18,10 @@ function AuthorizeWearableButton({ scope, name }: AuthorizeApi) {
                             window.location.href = `/api/oura/auth?${qs}`
                             return
                         }
-                        // Fitbit or others fall back to previous token flow
-                        const response = await fetch('/api/fitbit/profile', {
-                            method: 'GET',
-                        })
-                        if (!response.ok) throw new Error('Auth init failed')
+                        // Fitbit OAuth flow
+                        const qs = new URLSearchParams({ scope: 'activity heartrate nutrition sleep weight' }).toString()
+                        window.location.href = `/api/fitbit/auth?${qs}`
+                        return
                     } catch (e) {
                         toast.error(`Error: ${e}`)
                     }

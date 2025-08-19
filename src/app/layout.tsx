@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Nunito, Nanum_Myeongjo } from "next/font/google";
+import { Nunito, Nanum_Myeongjo, Oooh_Baby } from "next/font/google";
 import "./globals.css";
 import Provider from './provider'
 import { ToastContainer } from "react-toastify";
@@ -11,9 +11,15 @@ const nunitoSans = Nunito({
   subsets: ["latin"],
 });
 
-const nanumMono = Nanum_Myeongjo({
+const nanumMyeongjo = Nanum_Myeongjo({
   weight: ['400', '700'],
-  variable: "--font-nanum-mono",
+  variable: "--font-nanum-myeongjo",
+  subsets: ["latin"],
+});
+
+const ooohBaby = Oooh_Baby({
+  weight: '400',
+  variable: "--font-oooh-baby",
   subsets: ["latin"],
 });
 
@@ -29,7 +35,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${nunitoSans.variable} ${nanumMono.variable} antialiased`}>
+      <body className={`${nunitoSans.variable} ${nanumMyeongjo.variable} ${ooohBaby.variable} antialiased`}>
         <Provider>
           <>
             <ToastContainer 

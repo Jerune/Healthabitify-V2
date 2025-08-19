@@ -22,8 +22,8 @@ import Tabs from '@/data/tabs';
 
 function TimeSelectionModule({
     tabs = Tabs,
-    showDateTimeTabs,
-    showDateSpecifications,
+    showDateTimeTabs = true,
+    showDateSpecifications = true,
 }: TabListProps) {
     const dispatch = useAppDispatch()
     const activeTimeView = useAppSelector((state) => state.utils.activeTimeView)

@@ -63,9 +63,9 @@ function Dashboard() {
     if (!periodHasActiveData || !allAverages[`Y${year}`]) {
         return (
                 <div className="w-full pt-4 px-[5%] md:px-0 md:pt-16 flex flex-col justify-center md:justify-top items-center">
-                    <h2 className="text-xl italic">
+                    <h3 className="text-xl italic">
                         No Data is yet available for the chosen period.
-                    </h2>
+                    </h3>
                 </div>
         )
     }

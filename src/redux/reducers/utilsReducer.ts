@@ -50,7 +50,6 @@ export const utilsSlice = createSlice({
         toggleManualDataGrid: (state) => {
             return {
                 ...state,
-                activeTimeView: 'week',
                 manualDataGridOpen: !state.manualDataGridOpen,
             }
         },
