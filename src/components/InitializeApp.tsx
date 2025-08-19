@@ -19,11 +19,12 @@ import addDatapoints from '../firebase/firestore/data-points/addDatapoints'
 import { getYesterdaysDateAsString } from '../utils/getDatesAsString'
 import getApiData from '../services/getApiData'
 import transformOuraData from '../services/ouraAPI/transformOuraData'
+import transformBatchedOuraData from '../services/ouraAPI/transformBatchedOuraData'
 import buildAverages from '../features/AveragesManagement/buildAverages'
 import { getDateTimeDataForPreviousPeriod } from '../utils/getDateTimeData'
 import getListWithNewPeriods from '../features/AveragesManagement/getListWithNewPeriods'
 import createAveragesForNewPeriods from '../features/AveragesManagement/createAveragesForNewPeriods'
-import { FitbitRawData, OuraRawData } from '../types'
+import { DataPoint, FitbitRawData, OuraRawData } from '../types'
 import { toast } from 'react-toastify'
 
 function AppStateInit() {
@@ -139,9 +140,18 @@ function AppStateInit() {
             if (typeof ouraDataFromAPI[0] !== 'string') {
                 console.log('Oura data transformation starting...')
                 dispatch(changeLoadingMessage('Transforming Oura data'))
-                const newOuraDatapoints = await transformOuraData(
-                    ouraDataFromAPI
-                )
+                
+                let newOuraDatapoints: DataPoint[] = []
+                
+                // Check if this is batched data (multiple monthly responses)
+                if (Array.isArray(ouraDataFromAPI) && ouraDataFromAPI.length > 1) {
+                    console.log('Processing batched Oura data (monthly responses)')
+                    newOuraDatapoints = await transformBatchedOuraData(ouraDataFromAPI as unknown as OuraRawData[])
+                } else {
+                    console.log('Processing single Oura data response')
+                    newOuraDatapoints = await transformOuraData(ouraDataFromAPI)
+                }
+                
                 console.log('Transformed Oura datapoints:', newOuraDatapoints)
                 
                 if (newOuraDatapoints.length > 0) {
