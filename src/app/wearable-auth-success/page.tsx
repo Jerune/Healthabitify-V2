@@ -64,21 +64,15 @@ export default function WearableAuthSuccessPage() {
           </h1>
           
           <p className="text-gray-600 mb-6">
-            Thank you for authorizing access to your wearable data. Your account has been successfully connected.
+            You can close this window now.
           </p>
           
-          <div className="text-sm text-gray-500 mb-4">
-            Closing tab and redirecting to main app...
-          </div>
-          
-          <div className="mb-4">
-            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600 mx-auto"></div>
-          </div>
         </div>
       </div>
     )
   }
 
+  // If opened directly, show success message with navigation options
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8 text-center">
@@ -105,12 +99,8 @@ export default function WearableAuthSuccessPage() {
         </h1>
         
         <p className="text-gray-600 mb-6">
-          Thank you for authorizing access to your wearable data. Your account has been successfully connected.
+          Thank you for authorizing access to your wearable.
         </p>
-        
-        <div className="text-sm text-gray-500 mb-4">
-          Authorization completed successfully!
-        </div>
         
         <button
           onClick={() => {

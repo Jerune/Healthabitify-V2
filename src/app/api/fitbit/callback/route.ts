@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import updateWearables from '@/firebase/firestore/wearables/updateWearables'
 
 export async function GET(req: Request) {
   const url = new URL(req.url)
@@ -70,6 +71,13 @@ export async function GET(req: Request) {
   const accessToken = tokenJson.access_token as string
   const refreshToken = tokenJson.refresh_token as string
   const userId = tokenJson.user_id as string
+
+  // Update Firebase wearables collection with new token
+  try {
+    await updateWearables('fitbit', 'token', accessToken)
+  } catch (error) {
+    console.error('Failed to update Fitbit token:', error)
+  }
 
   const res = NextResponse.redirect(new URL('/wearable-auth-success', req.url))
   
