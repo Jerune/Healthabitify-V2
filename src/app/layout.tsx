@@ -4,6 +4,7 @@ import "./globals.css";
 import Provider from './provider'
 import { ToastContainer } from "react-toastify";
 import HeaderNav from "@/components/HeaderNav";
+import AuthListener from "@/components/AuthListener";
 
 const nunitoSans = Nunito({
   weight: ['300', '400', '500', '600', '700'],
@@ -48,6 +49,7 @@ export default function RootLayout({
                 autoClose={5000}
             />
             <HeaderNav />
+            <AuthListener />
             {children}
           </></Provider>
       </body>

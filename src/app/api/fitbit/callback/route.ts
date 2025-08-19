@@ -56,7 +56,7 @@ export async function GET(req: Request) {
   const refreshToken = tokenJson.refresh_token as string
   const userId = tokenJson.user_id as string
 
-  const res = NextResponse.redirect(new URL('/', req.url))
+  const res = NextResponse.redirect(new URL('/thank-you', req.url))
   
   // Store tokens in httpOnly cookies
   const isProd = process.env.NODE_ENV === 'production' || (process.env.FITBIT_REDIRECT_URI || '').startsWith('https://')

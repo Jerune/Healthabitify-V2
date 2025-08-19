@@ -51,7 +51,7 @@ export async function GET(req: Request) {
   const tokenJson = await tokenRes.json()
   const accessToken = tokenJson.access_token as string
 
-  const res = NextResponse.redirect(new URL('/', req.url))
+  const res = NextResponse.redirect(new URL('/thank-you', req.url))
   res.cookies.set('oura_access_token', accessToken, {
     httpOnly: true,
     secure: true,
