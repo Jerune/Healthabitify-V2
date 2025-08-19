@@ -33,14 +33,6 @@ export async function GET(request: Request) {
   const state = base64UrlEncode(crypto.randomBytes(16))
   const { verifier, challenge } = generateVerifierAndChallenge()
 
-  // Debug logging
-  console.log('Fitbit auth initiated:', { 
-    hasState: !!state, 
-    hasVerifier: !!verifier, 
-    hasChallenge: !!challenge,
-    redirectUri 
-  })
-
   // Build Fitbit authorization URL with PKCE
   const authUrl = new URL('https://www.fitbit.com/oauth2/authorize')
   authUrl.searchParams.set('client_id', clientId)

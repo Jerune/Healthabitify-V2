@@ -65,7 +65,6 @@ function AppStateInit() {
         const wearablesList = await getWearables()
         // Returns list of wearable data or error message
         if (typeof wearablesList !== 'string') {
-            console.log('Wearables loaded from Firebase:', wearablesList)
             dispatch(setDevices(wearablesList))
         } else {
             console.error('Failed to load wearables:', wearablesList)
@@ -120,13 +119,7 @@ function AppStateInit() {
                     )
             }
         }
-                if (devices.oura.lastUpdated <= yesterdayString) {
-            console.log('Oura data loading condition met:', {
-                lastUpdated: devices.oura.lastUpdated,
-                yesterdayString,
-                condition: devices.oura.lastUpdated <= yesterdayString
-            })
-            
+        if (devices.oura.lastUpdated <= yesterdayString) {
             dispatch(changeLoadingMessage('Gathering Oura Data'))
 
             const ouraDataFromAPI = (await getApiData(
@@ -135,24 +128,17 @@ function AppStateInit() {
                 devices.oura.lastUpdated
             )) as OuraRawData[]
 
-            console.log('Oura API response:', ouraDataFromAPI)
-
             if (typeof ouraDataFromAPI[0] !== 'string') {
-                console.log('Oura data transformation starting...')
                 dispatch(changeLoadingMessage('Transforming Oura data'))
                 
                 let newOuraDatapoints: DataPoint[] = []
                 
                 // Check if this is batched data (multiple monthly responses)
                 if (Array.isArray(ouraDataFromAPI) && ouraDataFromAPI.length > 1) {
-                    console.log('Processing batched Oura data (monthly responses)')
                     newOuraDatapoints = await transformBatchedOuraData(ouraDataFromAPI)
                 } else {
-                    console.log('Processing single Oura data response')
                     newOuraDatapoints = await transformOuraData(ouraDataFromAPI[0])
                 }
-                
-                console.log('Transformed Oura datapoints:', newOuraDatapoints)
                 
                 if (newOuraDatapoints.length > 0) {
                     console.log('Adding Oura datapoints to database...')
@@ -231,7 +217,6 @@ function AppStateInit() {
     }
 
     async function updateData() {
-        console.log('updateData function called')
         dispatch(changeLoadingStatus(true))
         await initializeServiceAPIs()
         await initializeWearables()

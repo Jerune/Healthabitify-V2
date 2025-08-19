@@ -6,13 +6,6 @@ export async function GET(req: Request) {
   const code = url.searchParams.get('code')
   const state = url.searchParams.get('state')
 
-  // Debug logging
-  console.log('Fitbit callback received:', { 
-    hasCode: !!code, 
-    hasState: !!state, 
-    url: req.url 
-  })
-
   if (!code || !state) {
     console.error('Missing code or state in Fitbit callback:', { code, state })
     return new NextResponse('Missing code or state', { status: 400 })
@@ -24,12 +17,6 @@ export async function GET(req: Request) {
       .map((c) => c.trim().split('='))
       .map(([k, ...v]) => [k, decodeURIComponent(v.join('='))])
   )
-
-  console.log('State validation:', { 
-    receivedState: state, 
-    storedState: cookies['fitbit_oauth_state'],
-    allCookies: Object.keys(cookies)
-  })
 
   if (cookies['fitbit_oauth_state'] !== state) {
     console.error('State mismatch in Fitbit callback')
