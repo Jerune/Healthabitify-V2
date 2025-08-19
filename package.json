@@ -11,7 +11,6 @@
   "dependencies": {
     "@inovua/reactdatagrid-community": "^5.10.2",
     "@reduxjs/toolkit": "^2.8.2",
-    "@tasoskakour/react-use-oauth2": "^2.1.1",
     "ag-grid-react": "^34.1.1",
     "firebase": "^12.1.0",
     "luxon": "^3.7.1",
