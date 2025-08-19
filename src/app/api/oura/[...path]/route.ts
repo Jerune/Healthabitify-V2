@@ -1,9 +1,8 @@
-export const runtime = 'nodejs'
-
 export async function GET(
   req: Request,
-  { params }: { params: { path: string[] } }
+  context: Promise<{ params: { path: string[] } }>
 ) {
+  const { params } = await context
   const upstreamUrl = new URL(
     `https://api.ouraring.com/v2/${params.path.join("/")}${
       new URL(req.url).search

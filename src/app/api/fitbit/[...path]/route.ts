@@ -1,9 +1,8 @@
-export const runtime = 'nodejs'
-
 export async function GET(
   req: Request,
-  { params }: { params: { path: string[] } }
+  context: Promise<{ params: { path: string[] } }>
 ) {
+  const { params } = await context
   const upstreamUrl = new URL(
     `https://api.fitbit.com/1/${params.path.join("/")}${
       new URL(req.url).search
