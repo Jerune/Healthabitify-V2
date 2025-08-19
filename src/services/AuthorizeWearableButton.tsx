@@ -13,6 +13,7 @@ function AuthorizeWearableButton({ scope, name }: AuthorizeApi) {
                 type="button"
                 onClick={async () => {
                     try {
+                        // Oura OAuth flow
                         if (name.toLowerCase() === 'oura') {
                             const qs = new URLSearchParams({ scope }).toString()
                             window.location.href = `/api/oura/auth?${qs}`
