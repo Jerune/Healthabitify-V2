@@ -1,5 +1,7 @@
 @import 'tailwindcss';
 @import 'react-toastify/dist/ReactToastify.css';
+@import 'ag-grid-community/styles/ag-grid.css';
+@import 'ag-grid-community/styles/ag-theme-alpine.css';
 
 :root {
   --background: #ffffff;
@@ -163,21 +165,4 @@ input:required:invalid {
 
 .react-date-picker__inputGroup {
   display: none !important;
-}
-
-/* Custom toast styling */
-.Toastify__toast--success {
-  background-color: #10b981;
-}
-
-.Toastify__toast--error {
-  background-color: #ef4444;
-}
-
-.Toastify__toast--warning {
-  background-color: #f59e0b;
-}
-
-.Toastify__toast--info {
-  background-color: #3b82f6;
 }

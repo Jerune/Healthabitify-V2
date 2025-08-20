@@ -13,7 +13,6 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "@inovua/reactdatagrid-community": "^5.10.2",
     "@reduxjs/toolkit": "^2.8.2",
     "ag-grid-react": "^34.1.1",
     "firebase": "^12.1.0",

@@ -1,61 +1,87 @@
-import { CellProps } from '@inovua/reactdatagrid-community/types';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { ColDef } from 'ag-grid-community';
 
-const columnsMock = [
-  { name: 'date', header: 'Date' },
+// AG Grid column definitions for mock data
+const columnsMock: ColDef[] = [
   {
-    name: 'RHR',
-    header: 'Average Resting Heart Rate (bpm)',
-    onRender: (
-      cellProps: CellProps,
-      { data }: { data: Record<string, number | string> }
-    ) => {
-      cellProps.style = cellProps.style || {};
-      const style = cellProps.style as React.CSSProperties;
+    field: 'date',
+    headerName: 'Date',
+    width: 120,
+    sortable: false,
+    filter: false,
+  },
+  {
+    field: 'RHR',
+    headerName: 'Average Resting Heart Rate (bpm)',
+    width: 200,
+    sortable: false,
+    filter: false,
+    cellRenderer: (params: any) => {
+      const { data } = params;
+      if (!data || !data.RHR || !data.prevRHR) return params.value || '-';
 
+      let backgroundColor = 'orange'; // default
       if (data.RHR < data.prevRHR) {
-        style.background = 'green';
+        backgroundColor = 'green';
       } else if (data.RHR > data.prevRHR) {
-        style.background = 'red';
-      } else {
-        style.background = 'orange';
+        backgroundColor = 'red';
       }
-    },
-  },
-  {
-    name: 'HRV',
-    header: 'Average Resting Heart Rate Variability (ms)',
-    onRender: (
-      cellProps: CellProps,
-      { data }: { data: Record<string, number | string> }
-    ) => {
-      cellProps.style = cellProps.style || {};
-      const style = cellProps.style as React.CSSProperties;
-      style.background = Number(data.HRV) > 50 ? 'green' : 'red';
-    },
-  },
-  {
-    name: 'Blood',
-    header: 'Blood Oxygen (SpO2) (%)',
-    onRender: (
-      cellProps: CellProps,
-      { data }: { data: Record<string, number | string> }
-    ) => {
-      cellProps.style = cellProps.style || {};
-      const style = cellProps.style as React.CSSProperties;
 
-      style.background = data.Blood > '96%' ? 'green' : 'red';
+      return {
+        value: params.value || '-',
+        style: { backgroundColor },
+      };
     },
   },
   {
-    name: 'Resp',
-    header: 'Respitory Rate (x/min)',
-    onRender: (
-      cellProps: CellProps,
-      { data }: { data: Record<string, number | string> }
-    ) => {
-      cellProps.style = cellProps.style || {};
-      const style = cellProps.style as React.CSSProperties;
-      style.background = Number(data.Resp) < 14.3 ? 'green' : 'red';
+    field: 'HRV',
+    headerName: 'Average Resting Heart Rate Variability (ms)',
+    width: 250,
+    sortable: false,
+    filter: false,
+    cellRenderer: (params: any) => {
+      const { data } = params;
+      if (!data || !data.HRV) return params.value || '-';
+
+      const backgroundColor = Number(data.HRV) > 50 ? 'green' : 'red';
+      return {
+        value: params.value || '-',
+        style: { backgroundColor },
+      };
+    },
+  },
+  {
+    field: 'Blood',
+    headerName: 'Blood Oxygen (SpO2) (%)',
+    width: 180,
+    sortable: false,
+    filter: false,
+    cellRenderer: (params: any) => {
+      const { data } = params;
+      if (!data || !data.Blood) return params.value || '-';
+
+      const backgroundColor = data.Blood > '96%' ? 'green' : 'red';
+      return {
+        value: params.value || '-',
+        style: { backgroundColor },
+      };
+    },
+  },
+  {
+    field: 'Resp',
+    headerName: 'Respitory Rate (x/min)',
+    width: 180,
+    sortable: false,
+    filter: false,
+    cellRenderer: (params: any) => {
+      const { data } = params;
+      if (!data || !data.Resp) return params.value || '-';
+
+      const backgroundColor = Number(data.Resp) < 14.3 ? 'green' : 'red';
+      return {
+        value: params.value || '-',
+        style: { backgroundColor },
+      };
     },
   },
 ];

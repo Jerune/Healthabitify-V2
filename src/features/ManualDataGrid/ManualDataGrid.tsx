@@ -1,8 +1,10 @@
+'use client';
+
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import ReactDataGrid from '@inovua/reactdatagrid-community';
-import { TypeEditInfo } from '@inovua/reactdatagrid-community/types';
-import { useCallback, useEffect, useState } from 'react';
+import { ColDef, GridReadyEvent } from 'ag-grid-community';
+import { AgGridReact } from 'ag-grid-react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import Loading from '../../components/Loading';
@@ -14,7 +16,7 @@ import { useAppDispatch, useAppSelector } from '../../redux/reduxHooks';
 import { LabtestMetric, Metric } from '../../types';
 import { getAllWeekDaysAsStrings } from '../../utils/getDatesAsString';
 import { getDateTimeDataForPreviousPeriod } from '../../utils/getDateTimeData';
-import { Column, DatapointToEdit, ManualDataProps, Row } from '../_types';
+import type { DatapointToEdit, ManualDataProps } from '../_types';
 import buildAverages from '../AveragesManagement/buildAverages';
 import createAveragesForNewPeriods from '../AveragesManagement/createAveragesForNewPeriods';
 import buildManualColumns from '../DataGrid/buildManualColumns';
@@ -33,12 +35,15 @@ function ManualDataGrid({ labs }: ManualDataProps) {
     deviceData.fitbit.lastUpdated > deviceData.oura.lastUpdated
       ? deviceData.oura.lastUpdated
       : deviceData.fitbit.lastUpdated;
-  const [activeColumns, setActiveColumns] = useState<Column[]>([]);
-  const [activeRows, setActiveRows] = useState<Row[]>([]);
+
+  const [activeColumns, setActiveColumns] = useState<ColDef[]>([]);
+  const [activeRows, setActiveRows] = useState<any[]>([]);
   const [editForm, setEditForm] = useState(false);
   const [datapointsToEdit, setDatapointsToEdit] = useState<DatapointToEdit[]>(
     []
   );
+
+  const gridRef = useRef<AgGridReact>(null);
 
   const labDates = [
     '2018-07-04',
@@ -53,6 +58,15 @@ function ManualDataGrid({ labs }: ManualDataProps) {
     '2023-02-13',
     '2023-11-07',
   ];
+
+  // Update column definitions when editForm changes
+  const columnDefs = useMemo<ColDef[]>(() => {
+    return activeColumns.map(col => ({
+      ...col,
+      editable: editForm,
+      cellEditor: editForm ? 'agTextCellEditor' : undefined,
+    }));
+  }, [activeColumns, editForm]);
 
   useEffect(() => {
     async function setDataGrid() {
@@ -73,20 +87,23 @@ function ManualDataGrid({ labs }: ManualDataProps) {
         }
 
         const columns = await buildManualColumns(dates, labs);
+        console.log('ManualDataGrid - columns:', columns);
         setActiveColumns(columns);
         const datapoints = await getManualDatapointsByDate(
           currentDateTime,
           activeMetrics,
           labs
         );
+        console.log('ManualDataGrid - datapoints:', datapoints);
         const rows = buildManualRows(datapoints, dates);
+        console.log('ManualDataGrid - rows:', rows);
         setActiveRows(rows);
       }
     }
     if (!isLoading) {
       setDataGrid();
     }
-  }, [currentDateTime]);
+  }, [currentDateTime, isLoading, labs]);
 
   useEffect(() => {
     async function updateLabData() {
@@ -144,55 +161,82 @@ function ManualDataGrid({ labs }: ManualDataProps) {
     } else if (!editForm && datapointsToEdit.length > 0 && labs) {
       updateLabData();
     }
-  }, [editForm]);
+  }, [editForm, datapointsToEdit, labs, lastUpdated, allMetrics, dispatch]);
 
-  const onEditComplete = useCallback(
-    ({ value, columnId, rowId }: TypeEditInfo) => {
-      const data = [...activeRows];
-      const id = data[rowId as any].cells[columnId];
-      const metricName = data[rowId as any].metric;
-      const metric = metricName
-        ? metricName.split(' ').join('-').toLowerCase()
-        : '';
+  const onGridReady = useCallback((_params: GridReadyEvent) => {
+    // Grid is ready
+  }, []);
 
-      if (value) {
-        data[rowId as any][columnId] = value;
-      }
+  const onCellValueChanged = useCallback((params: any) => {
+    const { colDef, newValue, data } = params;
+    const columnId = colDef.field;
+    const rowId = data.id;
+    const metricName = data.metric;
+    const metric = metricName
+      ? metricName.split(' ').join('-').toLowerCase()
+      : '';
 
+    if (newValue !== undefined && newValue !== null && newValue !== '') {
       setDatapointsToEdit(prevState => {
-        const idToChange = id || 'new';
+        const idToChange = rowId || 'new';
         return [
           ...prevState,
-          { date: columnId, id: idToChange, value, metric },
+          { date: columnId, id: idToChange, value: newValue, metric },
         ];
       });
-      setActiveRows(data);
-    },
-    [activeRows]
-  );
+    }
+  }, []);
 
   if (isLoading) {
     return <Loading size={50} />;
   }
 
+  console.log('ManualDataGrid - Final render state:', {
+    activeColumns: activeColumns.length,
+    activeRows: activeRows.length,
+    columnDefs: columnDefs.length,
+    editForm,
+    isLoading,
+    currentDateTime: currentDateTime.currentDate,
+    allMetrics: allMetrics.length,
+  });
+
   return (
     <div className='h-full w-full flex flex-col'>
-      <ReactDataGrid
-        idProperty='id'
-        columns={activeColumns}
-        dataSource={activeRows}
-        activateRowOnFocus={false}
-        showActiveRowIndicator={false}
-        showHoverRows={false}
-        showColumnMenuTool={false}
-        showColumnMenuFilterOptions={false}
-        showColumnMenuGroupOptions={false}
-        sortable={false}
-        resizable={false}
-        editable={editForm}
-        onEditComplete={onEditComplete}
-        className='flex-1'
-      />
+      {columnDefs.length === 0 ? (
+        <div className='p-4 text-center text-gray-500'>
+          No data available. Columns: {activeColumns.length}, Rows:{' '}
+          {activeRows.length}
+        </div>
+      ) : (
+        <div
+          className='ag-theme-alpine flex-1'
+          style={{ height: '400px', width: '100%' }}
+        >
+          <AgGridReact
+            ref={gridRef}
+            columnDefs={columnDefs}
+            rowData={activeRows}
+            onGridReady={onGridReady}
+            onCellValueChanged={onCellValueChanged}
+            rowSelection='single'
+            suppressRowClickSelection={true}
+            suppressCellFocus={!editForm}
+            suppressRowHoverHighlight={!editForm}
+            suppressColumnMoveAnimation={true}
+            suppressAnimationFrame={true}
+            suppressLoadingOverlay={true}
+            suppressNoRowsOverlay={true}
+            suppressFieldDotNotation={true}
+            suppressBrowserResizeObserver={true}
+            suppressMenuHide={true}
+            suppressRowTransform={true}
+            suppressColumnVirtualisation={false}
+            suppressRowVirtualisation={false}
+            enableCellTextSelection={editForm}
+          />
+        </div>
+      )}
       <div className='md:sticky p-2 h-16 w-full bottom-0 flex flex-row gap-4 justify-between bg-white'>
         <SettingsButton
           type='button'

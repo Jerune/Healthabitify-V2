@@ -1,20 +1,21 @@
-import { CellProps } from '@inovua/reactdatagrid-community/types';
-
 import metricsWithStringOutput from '../../data/metrics/metricsWithStringOutput';
 import metricsWithZeroValues from '../../data/metrics/metricsWithZeroValues';
 import { Metric } from '../../types';
 import kebabcaseToCamelcase from '../../utils/kebabcaseToCamelcase';
 
+// AG Grid cell renderer function that returns cell styling
 function getConditionalFormatting(metric: Metric) {
   const hasStringOutput = metricsWithStringOutput.includes(metric.id);
   const { id, conditionsMode, good, bad } = metric;
   const correctId = kebabcaseToCamelcase(id);
+
   const backgroundColors = {
     good: '#B7E2CD',
     medium: '#FDE5CE',
     bad: '#F4CCCD',
     none: 'white',
   };
+
   const fontColors = {
     good: 'black',
     medium: 'black',
@@ -22,20 +23,22 @@ function getConditionalFormatting(metric: Metric) {
     none: 'white',
   };
 
-  if (conditionsMode === 'higher') {
-    return (
-      cellProps: CellProps,
-      { data }: { data: Record<string, number | string> }
-    ) => {
-      cellProps.style = cellProps.style || {};
-      const style = cellProps.style as React.CSSProperties;
+  // Return a cell renderer function for AG Grid
+  return (params: any) => {
+    const { data } = params;
+    if (!data) return params.value || '-';
 
-      const dataForCurrentPeriod = !hasStringOutput
-        ? Number(data[correctId])
-        : data[correctId];
-      const dataForPreviousPeriod = !hasStringOutput
-        ? Number(data[`prev${correctId}`])
-        : data[`prev${correctId}`];
+    const dataForCurrentPeriod = !hasStringOutput
+      ? Number(data[correctId])
+      : data[correctId];
+    const dataForPreviousPeriod = !hasStringOutput
+      ? Number(data[`prev${correctId}`])
+      : data[`prev${correctId}`];
+
+    let backgroundColor = backgroundColors.none;
+    let color = fontColors.none;
+
+    if (conditionsMode === 'higher') {
       if (
         (dataForCurrentPeriod === 0 &&
           !metricsWithZeroValues.includes(metric.id)) ||
@@ -44,44 +47,27 @@ function getConditionalFormatting(metric: Metric) {
         dataForCurrentPeriod === '00:00' ||
         dataForCurrentPeriod === '0:00'
       ) {
-        style.background = backgroundColors.none;
-        style.color = fontColors.none;
+        backgroundColor = backgroundColors.none;
+        color = fontColors.none;
       } else if (dataForCurrentPeriod === '---') {
-        style.background = backgroundColors.none;
+        backgroundColor = backgroundColors.none;
       } else if (
         dataForCurrentPeriod === undefined ||
         (Number.isNaN(Number(dataForCurrentPeriod)) &&
           metricsWithZeroValues.includes(metric.id))
       ) {
-        style.background = backgroundColors.none;
+        backgroundColor = backgroundColors.none;
       } else if (dataForCurrentPeriod > dataForPreviousPeriod) {
-        style.background = backgroundColors.good;
-        style.color = fontColors.good;
+        backgroundColor = backgroundColors.good;
+        color = fontColors.good;
       } else if (dataForCurrentPeriod === dataForPreviousPeriod) {
-        style.background = backgroundColors.medium;
-        style.color = fontColors.medium;
+        backgroundColor = backgroundColors.medium;
+        color = fontColors.medium;
       } else if (dataForCurrentPeriod < dataForPreviousPeriod) {
-        style.background = backgroundColors.bad;
-        style.color = fontColors.bad;
-      } else {
-        style.background = backgroundColors.none;
+        backgroundColor = backgroundColors.bad;
+        color = fontColors.bad;
       }
-    };
-  }
-  if (conditionsMode === 'lower') {
-    return (
-      cellProps: CellProps,
-      { data }: { data: Record<string, number | string> }
-    ) => {
-      cellProps.style = cellProps.style || {};
-      const style = cellProps.style as React.CSSProperties;
-
-      const dataForCurrentPeriod = !hasStringOutput
-        ? Number(data[correctId])
-        : data[correctId];
-      const dataForPreviousPeriod = !hasStringOutput
-        ? Number(data[`prev${correctId}`])
-        : data[`prev${correctId}`];
+    } else if (conditionsMode === 'lower') {
       if (
         (dataForCurrentPeriod === 0 &&
           !metricsWithZeroValues.includes(metric.id)) ||
@@ -90,47 +76,30 @@ function getConditionalFormatting(metric: Metric) {
         dataForCurrentPeriod === '00:00' ||
         dataForCurrentPeriod === '0:00'
       ) {
-        style.background = backgroundColors.none;
-        style.color = fontColors.none;
+        backgroundColor = backgroundColors.none;
+        color = fontColors.none;
       } else if (dataForCurrentPeriod === '---') {
-        style.background = backgroundColors.none;
+        backgroundColor = backgroundColors.none;
       } else if (
         dataForCurrentPeriod === undefined ||
         (Number.isNaN(Number(dataForCurrentPeriod)) &&
           metricsWithZeroValues.includes(metric.id))
       ) {
-        style.background = backgroundColors.none;
+        backgroundColor = backgroundColors.none;
       } else if (dataForCurrentPeriod < dataForPreviousPeriod) {
-        style.background = backgroundColors.good;
-        style.color = fontColors.good;
+        backgroundColor = backgroundColors.good;
+        color = fontColors.good;
       } else if (
         dataForCurrentPeriod === dataForPreviousPeriod &&
         !metricsWithZeroValues.includes(metric.id)
       ) {
-        style.background = backgroundColors.medium;
-        style.color = fontColors.medium;
+        backgroundColor = backgroundColors.medium;
+        color = fontColors.medium;
       } else if (dataForCurrentPeriod > dataForPreviousPeriod) {
-        style.background = backgroundColors.bad;
-        style.color = fontColors.bad;
-      } else {
-        style.background = backgroundColors.none;
+        backgroundColor = backgroundColors.bad;
+        color = fontColors.bad;
       }
-    };
-  }
-  if (conditionsMode === 'range' && good.mode === 'more') {
-    return (
-      cellProps: CellProps,
-      { data }: { data: Record<string, number | string> }
-    ) => {
-      cellProps.style = cellProps.style || {};
-      const style = cellProps.style as React.CSSProperties;
-
-      const dataForCurrentPeriod = !hasStringOutput
-        ? Number(data[correctId])
-        : data[correctId];
-      const goodValue = !hasStringOutput ? Number(good.value) : good.value;
-      const badValue = !hasStringOutput ? Number(bad.value) : bad.value;
-      console.log(dataForCurrentPeriod);
+    } else if (conditionsMode === 'range' && good.mode === 'more') {
       if (
         (dataForCurrentPeriod === 0 &&
           !metricsWithZeroValues.includes(metric.id)) ||
@@ -139,37 +108,27 @@ function getConditionalFormatting(metric: Metric) {
         dataForCurrentPeriod === '00:00' ||
         dataForCurrentPeriod === '0:00'
       ) {
-        style.background = backgroundColors.none;
-        style.color = fontColors.none;
+        backgroundColor = backgroundColors.none;
+        color = fontColors.none;
       } else if (dataForCurrentPeriod === '---') {
-        style.background = backgroundColors.none;
+        backgroundColor = backgroundColors.none;
       } else if (
         dataForCurrentPeriod === undefined ||
         (Number.isNaN(Number(dataForCurrentPeriod)) &&
           metricsWithZeroValues.includes(metric.id))
       ) {
-        style.background = backgroundColors.none;
-      } else if (dataForCurrentPeriod > goodValue) {
-        style.background = backgroundColors.good;
-        style.color = fontColors.good;
-      } else if (dataForCurrentPeriod < badValue) {
-        style.background = backgroundColors.bad;
-        style.color = fontColors.bad;
+        backgroundColor = backgroundColors.none;
+      } else if (dataForCurrentPeriod > good.value) {
+        backgroundColor = backgroundColors.good;
+        color = fontColors.good;
+      } else if (dataForCurrentPeriod < bad.value) {
+        backgroundColor = backgroundColors.bad;
+        color = fontColors.bad;
       } else {
-        style.background = backgroundColors.medium;
-        style.color = fontColors.medium;
+        backgroundColor = backgroundColors.medium;
+        color = fontColors.medium;
       }
-    };
-  }
-  if (conditionsMode === 'range' && good.mode === 'less') {
-    return (
-      cellProps: CellProps,
-      { data }: { data: Record<string, number | string> }
-    ) => {
-      cellProps.style = cellProps.style || {};
-      const style = cellProps.style as React.CSSProperties;
-
-      const dataForCurrentPeriod = data[correctId];
+    } else if (conditionsMode === 'range' && good.mode === 'less') {
       if (
         (dataForCurrentPeriod === '0' &&
           !metricsWithZeroValues.includes(metric.id)) ||
@@ -177,24 +136,27 @@ function getConditionalFormatting(metric: Metric) {
           !metricsWithZeroValues.includes(metric.id)) ||
         dataForCurrentPeriod === '00:00'
       ) {
-        style.background = backgroundColors.none;
-        style.color = fontColors.none;
+        backgroundColor = backgroundColors.none;
+        color = fontColors.none;
       } else if (dataForCurrentPeriod === '---') {
-        style.background = backgroundColors.none;
+        backgroundColor = backgroundColors.none;
       } else if (dataForCurrentPeriod < good.value) {
-        style.background = backgroundColors.good;
-        style.color = fontColors.good;
+        backgroundColor = backgroundColors.good;
+        color = fontColors.good;
       } else if (dataForCurrentPeriod > bad.value) {
-        style.background = backgroundColors.bad;
-        style.color = fontColors.bad;
+        backgroundColor = backgroundColors.bad;
+        color = fontColors.bad;
       } else {
-        style.background = backgroundColors.medium;
-        style.color = fontColors.medium;
+        backgroundColor = backgroundColors.medium;
+        color = fontColors.medium;
       }
-    };
-  }
+    }
 
-  return 'error';
+    return {
+      value: params.value || '-',
+      style: { backgroundColor, color },
+    };
+  };
 }
 
 export default getConditionalFormatting;

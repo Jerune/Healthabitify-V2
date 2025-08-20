@@ -3,14 +3,14 @@ import { DateTime } from 'luxon';
 import metricsWithZeroValues from '../../data/metrics/metricsWithZeroValues';
 import { Metric } from '../../types';
 import kebabcaseToCamelcase from '../../utils/kebabcaseToCamelcase';
-import { AveragesData, Row } from '../_types';
+import type { AveragesData, MonthlyRowData } from '../_types';
 import adjustValueOutput from '../DataOutputManagement/adjustValueOutput';
 
 function getMonthlyRowData(
   activeMetrics: Metric[],
   allAverages: AveragesData
-): Row[] {
-  const rows: Row[] = [];
+): MonthlyRowData[] {
+  const rows: MonthlyRowData[] = [];
 
   const years = Object.keys(allAverages);
   years.forEach(year => {
@@ -24,11 +24,10 @@ function getMonthlyRowData(
       const dateTitle = `${monthName} ${activeYear}`;
 
       // Setting default row data
-      const row: Row = {
+      const row: MonthlyRowData = {
         year: activeYear,
         month: monthNumber,
         id: `${activeYear}-${monthNumber}`,
-        cells: {},
         date: dateTitle,
       };
       // Retrieving average data from every metric for that month

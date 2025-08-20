@@ -80,30 +80,7 @@ export type DashboardDataProps = {
   data: MetricDashboardData;
 };
 
-// Data Grid
-
-export type Row = {
-  metric?: string;
-  id: string | number;
-  reference?: string;
-  cells: { [key: string]: string };
-  [key: string]: string | number | { [key: string]: string | number };
-};
-
-export type Column = {
-  name: string;
-  id: string;
-  header: string;
-  headerProps: {
-    style: {
-      color: string;
-      fontStyle: string;
-      fontWeight: string;
-      fontSize: string;
-    };
-  };
-};
-
+// Data Grid - AG Grid compatible types
 export type DataPoint = {
   date?: string;
   id: string;
@@ -114,6 +91,37 @@ export type DatapointsForDataGrid = {
   [key: string]: DataPoint[];
   type?: string;
   reference?: string;
+};
+
+// AG Grid row data types
+export type AGGridRow = {
+  id: string;
+  metric: string;
+  reference?: string;
+  [key: string]: string | number | undefined;
+};
+
+export type MonthlyRowData = {
+  year: number;
+  month: number;
+  id: string;
+  date: string;
+  [key: string]: string | number;
+};
+
+export type WeeklyRowData = {
+  year: number;
+  weekNumber: number;
+  id: string;
+  date: string;
+  [key: string]: string | number;
+};
+
+export type YearlyRowData = {
+  year: number;
+  id: string;
+  date: string;
+  [key: string]: string | number;
 };
 
 // ManualDataGrid
