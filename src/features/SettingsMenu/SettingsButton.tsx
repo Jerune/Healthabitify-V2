@@ -1,7 +1,7 @@
 import { Settingsbutton } from '../_types';
 
 function SettingsButton({ type, active, text, onClick }: Settingsbutton) {
-  const genericStyles = 'w-[50%] max-w-[600px] px-5 py-3 text-base';
+  const genericStyles = 'w-[50%] px-5 py-3 text-base';
   const activeStyles =
     'bg-green-600 hover:opacity-90 text-white pointer cursor-pointer';
   const nonActiveStyles =

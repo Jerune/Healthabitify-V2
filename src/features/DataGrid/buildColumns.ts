@@ -22,7 +22,7 @@ async function buildColumns(activeMetrics: Metric[]) {
         },
       },
       flex: 1,
-      textAlign: 'center',
+      textAlign: 'left',
       maxWidth: 300,
       minWidth: 100,
       onRender,
