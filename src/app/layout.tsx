@@ -6,6 +6,8 @@ import './globals.css';
 import AuthListener from '@/components/AuthListener';
 import HeaderNav from '@/components/HeaderNav';
 
+import ManualDataGridContainer from '../features/ManualDataGrid/ManualDataGridContainer';
+
 import Provider from './provider';
 
 const nunitoSans = Nunito({
@@ -46,12 +48,25 @@ export default function RootLayout({
       <body
         className={`${nunitoSans.variable} ${nanumMyeongjo.variable} ${ooohBaby.variable} antialiased`}
       >
+        <ToastContainer
+          position='top-center'
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme='light'
+          limit={3}
+        />
         <Provider>
           <>
-            <ToastContainer position='top-center' autoClose={5000} />
             <HeaderNav />
             <AuthListener />
             {children}
+            <ManualDataGridContainer />
           </>
         </Provider>
       </body>
