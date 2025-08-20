@@ -2,7 +2,7 @@
 
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ColDef, GridReadyEvent } from 'ag-grid-community';
+import { AllCommunityModule, ColDef, ModuleRegistry } from 'ag-grid-community';
 import { AgGridReact } from 'ag-grid-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -23,7 +23,10 @@ import buildManualColumns from '../DataGrid/buildManualColumns';
 import buildManualRows from '../DataGrid/buildManualRows';
 import SettingsButton from '../SettingsMenu/SettingsButton';
 
+import { defaultColDef, gridTheme } from './theme';
 import updateManualDatapoints from './updateManualDatapoints';
+
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 function ManualDataGrid({ labs }: ManualDataProps) {
   const dispatch = useAppDispatch();
@@ -163,10 +166,6 @@ function ManualDataGrid({ labs }: ManualDataProps) {
     }
   }, [editForm, datapointsToEdit, labs, lastUpdated, allMetrics, dispatch]);
 
-  const onGridReady = useCallback((_params: GridReadyEvent) => {
-    // Grid is ready
-  }, []);
-
   const onCellValueChanged = useCallback((params: any) => {
     const { colDef, newValue, data } = params;
     const columnId = colDef.field;
@@ -191,53 +190,29 @@ function ManualDataGrid({ labs }: ManualDataProps) {
     return <Loading size={50} />;
   }
 
-  console.log('ManualDataGrid - Final render state:', {
-    activeColumns: activeColumns.length,
-    activeRows: activeRows.length,
-    columnDefs: columnDefs.length,
-    editForm,
-    isLoading,
-    currentDateTime: currentDateTime.currentDate,
-    allMetrics: allMetrics.length,
-  });
-
   return (
-    <div className='h-full w-full flex flex-col'>
+    <div className='h-full w-full flex flex-col justify-between'>
       {columnDefs.length === 0 ? (
         <div className='p-4 text-center text-gray-500'>
           No data available. Columns: {activeColumns.length}, Rows:{' '}
           {activeRows.length}
         </div>
       ) : (
-        <div
-          className='ag-theme-alpine flex-1'
-          style={{ height: '400px', width: '100%' }}
-        >
+        <div className='h-full w-full'>
           <AgGridReact
             ref={gridRef}
             columnDefs={columnDefs}
             rowData={activeRows}
-            onGridReady={onGridReady}
+            theme={gridTheme}
+            defaultColDef={defaultColDef}
             onCellValueChanged={onCellValueChanged}
-            rowSelection='single'
-            suppressRowClickSelection={true}
             suppressCellFocus={!editForm}
-            suppressRowHoverHighlight={!editForm}
-            suppressColumnMoveAnimation={true}
-            suppressAnimationFrame={true}
-            suppressLoadingOverlay={true}
-            suppressNoRowsOverlay={true}
-            suppressFieldDotNotation={true}
-            suppressBrowserResizeObserver={true}
-            suppressMenuHide={true}
-            suppressRowTransform={true}
-            suppressColumnVirtualisation={false}
-            suppressRowVirtualisation={false}
+            suppressRowHoverHighlight={true}
             enableCellTextSelection={editForm}
           />
         </div>
       )}
-      <div className='md:sticky p-2 h-16 w-full bottom-0 flex flex-row gap-4 justify-between bg-white'>
+      <div className='p-2 h-16 w-full bottom-0 flex flex-row gap-4 justify-between bg-white'>
         <SettingsButton
           type='button'
           active={!editForm}

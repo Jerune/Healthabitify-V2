@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import metricsWithStringOutput from '../../data/metrics/metricsWithStringOutput';
 import metricsWithZeroValues from '../../data/metrics/metricsWithZeroValues';
 import { Metric } from '../../types';

@@ -10,25 +10,17 @@ async function buildManualColumns(
   const dateColumns: ColDef[] = dates.map(date => ({
     field: date,
     headerName: getShortDate(date),
-    width: 120,
-    minWidth: 120,
-    maxWidth: 300,
     headerClass: 'ag-header-cell-custom',
     cellClass: 'ag-cell-custom',
     sortable: false,
     filter: false,
     resizable: true,
-    editable: false, // Will be controlled by editForm state
+    editable: false,
     cellStyle: {
-      textAlign: 'center',
-      color: '#1D3557',
+      textAlign: 'left',
     },
     headerStyle: {
-      color: '#1D3557',
       fontStyle: 'italic',
-      fontWeight: 'bold',
-      fontSize: '1.1em',
-      textAlign: 'center',
     },
   }));
 
@@ -36,26 +28,18 @@ async function buildManualColumns(
   const metricColumn: ColDef = {
     field: 'metric',
     headerName: 'Metric',
-    width: 200,
-    minWidth: 200,
-    maxWidth: 300,
     headerClass: 'ag-header-cell-custom',
     cellClass: 'ag-cell-custom',
     sortable: false,
     filter: false,
     resizable: true,
     editable: false,
+    flex: 2,
     cellStyle: {
-      textAlign: 'center',
-      color: '#1D3557',
-      fontWeight: 'bold',
+      textAlign: 'left',
     },
     headerStyle: {
-      color: '#1D3557',
       fontStyle: 'italic',
-      fontWeight: 'bold',
-      fontSize: '1.1em',
-      textAlign: 'center',
     },
   };
 
@@ -63,9 +47,6 @@ async function buildManualColumns(
   const referenceColumn: ColDef = {
     field: 'reference',
     headerName: 'Ref.',
-    width: 80,
-    minWidth: 50,
-    maxWidth: 100,
     headerClass: 'ag-header-cell-custom',
     cellClass: 'ag-cell-custom',
     sortable: false,
@@ -73,17 +54,10 @@ async function buildManualColumns(
     resizable: true,
     editable: false,
     cellStyle: {
-      textAlign: 'center',
-      color: '#1D3557',
-      fontStyle: 'italic',
-      fontWeight: 'bold',
+      textAlign: 'left',
     },
     headerStyle: {
-      color: '#1D3557',
       fontStyle: 'italic',
-      fontWeight: 'bold',
-      fontSize: '1.1em',
-      textAlign: 'center',
     },
   };
 
