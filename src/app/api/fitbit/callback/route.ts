@@ -62,12 +62,6 @@ export async function GET(req: Request) {
   const refreshToken = tokenJson.refresh_token as string;
   const userId = tokenJson.user_id as string;
 
-  console.log('Fitbit token details:', {
-    accessToken: accessToken ? 'present' : 'missing',
-    refreshToken: refreshToken ? 'present' : 'missing',
-    userId: userId || 'missing',
-  });
-
   // Update Firebase wearables collection with new tokens
   try {
     await updateWearables('fitbit', 'token', accessToken);

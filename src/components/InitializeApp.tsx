@@ -77,6 +77,35 @@ function AppStateInit() {
     const yesterdayString = getYesterdaysDateAsString();
     // Checks if there is any new dates with possible new data
     if (devices.fitbit.lastUpdated <= yesterdayString) {
+      // Refresh token before loading new data
+      try {
+        const response = await fetch('/api/refresh-token', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ platform: 'fitbit' }),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.error('Fitbit token refresh failed:', errorData);
+
+          // Check if we need to re-authorize
+          if (errorData.action === 'reauthorize') {
+            console.log('Redirecting to Fitbit re-authorization...');
+            window.location.href = errorData.authUrl;
+            return;
+          }
+          console.log('Fitbit token refresh failed, skipping data load');
+          return;
+        }
+
+        console.log('Fitbit token refreshed successfully');
+      } catch (error) {
+        console.error('Failed to refresh Fitbit token:', error);
+        return;
+      }
+
       dispatch(changeLoadingMessage('Gathering Fitbit Data'));
       // Gets data for those dates from Fitbit API
       const fitbitDataFromAPI = (await getApiData(
@@ -115,6 +144,35 @@ function AppStateInit() {
       }
     }
     if (devices.oura.lastUpdated <= yesterdayString) {
+      // Refresh token before loading new data
+      try {
+        const response = await fetch('/api/refresh-token', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ platform: 'oura' }),
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.error('Oura token refresh failed:', errorData);
+
+          // Check if we need to re-authorize
+          if (errorData.action === 'reauthorize') {
+            console.log('Redirecting to Oura re-authorization...');
+            window.location.href = errorData.authUrl;
+            return;
+          }
+          console.log('Oura token refresh failed, skipping data load');
+          return;
+        }
+
+        console.log('Oura token refreshed successfully');
+      } catch (error) {
+        console.error('Failed to refresh Oura token:', error);
+        return;
+      }
+
       dispatch(changeLoadingMessage('Gathering Oura Data'));
 
       const ouraDataFromAPI = (await getApiData(
@@ -197,81 +255,6 @@ function AppStateInit() {
     // Function that can be used to perform separate manual adjustments
   }
 
-  async function refreshTokensIfNeeded() {
-    try {
-      console.log('Refreshing tokens before data load...');
-
-      // Always refresh Fitbit token before data load
-      await refreshFitbitToken();
-
-      // Always refresh Oura token before data load
-      await refreshOuraToken();
-
-      console.log('Token refresh completed');
-    } catch (error) {
-      console.error('Error refreshing wearable tokens:', error);
-    }
-  }
-
-  // Simple token refresh functions
-  async function refreshFitbitToken() {
-    try {
-      const response = await fetch('/api/refresh-token', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ platform: 'fitbit' }),
-      });
-
-      if (response.ok) {
-        console.log('Fitbit token refreshed successfully');
-        // Refresh wearables data to get updated expiration date
-        await initializeWearables();
-      } else {
-        const errorData = await response.json();
-        console.error('Fitbit token refresh failed:', errorData);
-
-        // Check if we need to re-authorize
-        if (errorData.action === 'reauthorize') {
-          console.log('Redirecting to Fitbit re-authorization...');
-          window.location.href = errorData.authUrl;
-          return;
-        }
-      }
-    } catch (error) {
-      console.error('Failed to refresh Fitbit token:', error);
-    }
-  }
-
-  async function refreshOuraToken() {
-    try {
-      const response = await fetch('/api/refresh-token', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ platform: 'oura' }),
-      });
-
-      if (response.ok) {
-        console.log('Oura token refreshed successfully');
-        // Refresh wearables data to get updated expiration date
-        await initializeWearables();
-      } else {
-        const errorData = await response.json();
-        console.error('Oura token refresh failed:', errorData);
-
-        // Check if we need to re-authorize
-        if (errorData.action === 'reauthorize') {
-          console.log('Redirecting to Oura re-authorization...');
-          window.location.href = errorData.authUrl;
-          return;
-        }
-      }
-    } catch (error) {
-      console.error('Failed to refresh Oura token:', error);
-    }
-  }
-
   async function initApp() {
     dispatch(changeLoadingStatus(true));
     await initializeMetrics();
@@ -281,8 +264,6 @@ function AppStateInit() {
 
   async function updateData() {
     dispatch(changeLoadingStatus(true));
-
-    await refreshTokensIfNeeded();
 
     await initializeServiceAPIs();
     await initializeWearables();
