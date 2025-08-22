@@ -25,7 +25,7 @@ function ManualDataGridContainer() {
             type='button'
             id='close'
             onClick={handleClose}
-            className='absolute right-4 top-4 z-50'
+            className='absolute right-4 top-4 z-50 cursor-pointer'
           >
             <Icon iconId='TfiClose' />
           </button>

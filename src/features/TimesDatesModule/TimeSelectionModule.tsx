@@ -5,9 +5,9 @@ import { DateTime } from 'luxon';
 import { useEffect, useState } from 'react';
 import DatePicker from 'react-date-picker';
 
-import 'react-date-picker/dist/DatePicker.css';
-import 'react-calendar/dist/Calendar.css';
 import Tabs from '@/data/tabs';
+import 'react-calendar/dist/Calendar.css';
+import 'react-date-picker/dist/DatePicker.css';
 
 import Icon from '../../components/icon';
 import {
@@ -123,7 +123,7 @@ function TimeSelectionModule({
             calendarIcon={<Icon iconId='TfiCalendar' />}
           />
           <button
-            className='pl-2'
+            className='pl-2 cursor-pointer'
             type='button'
             onClick={() => changeTimeView('previous', activeTimeView)}
           >
@@ -133,6 +133,7 @@ function TimeSelectionModule({
             {dateTitle[activeTimeView as keyof DateTitles]}
           </span>
           <button
+            className='cursor-pointer'
             type='button'
             onClick={() => changeTimeView('next', activeTimeView)}
           >

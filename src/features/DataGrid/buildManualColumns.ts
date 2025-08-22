@@ -51,6 +51,7 @@ async function buildManualColumns(
     cellClass: 'ag-cell-custom',
     sortable: false,
     filter: false,
+    minWidth: 160,
     resizable: true,
     editable: false,
     cellStyle: {
