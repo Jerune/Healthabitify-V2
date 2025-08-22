@@ -233,6 +233,7 @@ function AppStateInit() {
       const response = await fetch('/api/refresh-token', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ platform: 'fitbit' }),
       });
 
@@ -240,6 +241,9 @@ function AppStateInit() {
         console.log('Fitbit token refreshed successfully');
         // Refresh wearables data to get updated expiration date
         await initializeWearables();
+      } else {
+        const errorData = await response.json();
+        console.error('Fitbit token refresh failed:', errorData);
       }
     } catch (error) {
       console.error('Failed to refresh Fitbit token:', error);
@@ -251,6 +255,7 @@ function AppStateInit() {
       const response = await fetch('/api/refresh-token', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ platform: 'oura' }),
       });
 
@@ -258,6 +263,9 @@ function AppStateInit() {
         console.log('Oura token refreshed successfully');
         // Refresh wearables data to get updated expiration date
         await initializeWearables();
+      } else {
+        const errorData = await response.json();
+        console.error('Oura token refresh failed:', errorData);
       }
     } catch (error) {
       console.error('Failed to refresh Oura token:', error);
