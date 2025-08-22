@@ -37,9 +37,7 @@ export async function refreshOuraToken(refreshToken: string) {
 
   const response = await fetch('https://api.ouraring.com/oauth/token', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: new URLSearchParams({
       grant_type: 'refresh_token',
       refresh_token: refreshToken,
@@ -55,13 +53,4 @@ export async function refreshOuraToken(refreshToken: string) {
   }
 
   return response.json();
-}
-
-export function isTokenExpiringSoon(
-  expiresAt: number,
-  bufferMinutes: number = 60
-): boolean {
-  const now = Math.floor(Date.now() / 1000);
-  const bufferSeconds = bufferMinutes * 60;
-  return expiresAt - now <= bufferSeconds;
 }

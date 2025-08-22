@@ -20,7 +20,8 @@ function generateVerifierAndChallenge() {
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
-  const scope = url.searchParams.get('scope') || 'daily.read';
+  const scope =
+    url.searchParams.get('scope') || 'daily heartrate workout session';
 
   const clientId = process.env.OURA_CLIENT_ID;
   const redirectUri = process.env.OURA_REDIRECT_URI;

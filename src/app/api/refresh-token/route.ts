@@ -2,10 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import updateWearables from '@/firebase/firestore/wearables/updateWearables';
 import {
-  isTokenExpiringSoon,
   refreshFitbitToken,
   refreshOuraToken,
-} from '@/services/tokenRefresh';
+} from '@/services/wearableTokenRefresh';
 
 export async function POST(request: NextRequest) {
   try {
@@ -25,19 +24,12 @@ export async function POST(request: NextRequest) {
 
     if (platform === 'fitbit') {
       const refreshToken = cookies['fitbit_refresh_token'];
-      const expiresAt = parseInt(cookies['fitbit_token_expires_at'] || '0');
 
       if (!refreshToken) {
         return NextResponse.json(
           { error: 'No refresh token available' },
           { status: 400 }
         );
-      }
-
-      // Check if token expires in less than 1 week
-      if (!isTokenExpiringSoon(expiresAt, 7 * 24 * 60)) {
-        // 7 days in minutes
-        return NextResponse.json({ message: 'Token not expiring soon' });
       }
 
       const tokens = await refreshFitbitToken(refreshToken);
@@ -63,19 +55,12 @@ export async function POST(request: NextRequest) {
       });
     } else if (platform === 'oura') {
       const refreshToken = cookies['oura_refresh_token'];
-      const expiresAt = parseInt(cookies['oura_token_expires_at'] || '0');
 
       if (!refreshToken) {
         return NextResponse.json(
           { error: 'No refresh token available' },
           { status: 400 }
         );
-      }
-
-      // Check if token expires in less than 1 week
-      if (!isTokenExpiringSoon(expiresAt, 7 * 24 * 60)) {
-        // 7 days in minutes
-        return NextResponse.json({ message: 'Token not expiring soon' });
       }
 
       const tokens = await refreshOuraToken(refreshToken);
