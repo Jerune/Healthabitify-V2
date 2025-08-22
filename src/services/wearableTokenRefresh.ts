@@ -17,6 +17,7 @@ export async function refreshFitbitToken(refreshToken: string) {
   });
 
   console.log('Fitbit refresh request body:', requestBody.toString());
+  console.log('Fitbit refresh token being sent:', refreshToken);
 
   try {
     const response = await fetch('https://api.fitbit.com/oauth2/token', {
@@ -47,11 +48,16 @@ export async function refreshFitbitToken(refreshToken: string) {
     }
 
     const responseData = await response.json();
-    console.log('Fitbit refresh successful, response data:', {
-      access_token: responseData.access_token ? 'present' : 'missing',
-      refresh_token: responseData.refresh_token ? 'present' : 'missing',
-      expires_in: responseData.expires_in || 'missing',
-    });
+    console.log('=== FITBIT REFRESH RESPONSE ===');
+    console.log('Full response data:', JSON.stringify(responseData, null, 2));
+    console.log('Response keys:', Object.keys(responseData));
+    console.log('Access token present:', !!responseData.access_token);
+    console.log('Refresh token present:', !!responseData.refresh_token);
+    console.log('Expires in present:', !!responseData.expires_in);
+    console.log('Expires in value:', responseData.expires_in);
+    console.log('User ID present:', !!responseData.user_id);
+    console.log('User ID value:', responseData.user_id);
+    console.log('=== END FITBIT RESPONSE ===');
 
     return responseData;
   } catch (error) {
@@ -81,6 +87,7 @@ export async function refreshOuraToken(refreshToken: string) {
   });
 
   console.log('Oura refresh request body:', requestBody.toString());
+  console.log('Oura refresh token being sent:', refreshToken);
 
   try {
     const response = await fetch('https://api.ouraring.com/oauth/token', {
@@ -108,11 +115,18 @@ export async function refreshOuraToken(refreshToken: string) {
     }
 
     const responseData = await response.json();
-    console.log('Oura refresh successful, response data:', {
-      access_token: responseData.access_token ? 'present' : 'missing',
-      refresh_token: responseData.refresh_token ? 'present' : 'missing',
-      expires_in: responseData.expires_in || 'missing',
-    });
+    console.log('=== OURA REFRESH RESPONSE ===');
+    console.log('Full response data:', JSON.stringify(responseData, null, 2));
+    console.log('Response keys:', Object.keys(responseData));
+    console.log('Access token present:', !!responseData.access_token);
+    console.log('Refresh token present:', !!responseData.refresh_token);
+    console.log('Expires in present:', !!responseData.expires_in);
+    console.log('Expires in value:', responseData.expires_in);
+    console.log('Token type present:', !!responseData.token_type);
+    console.log('Token type value:', responseData.token_type);
+    console.log('Scope present:', !!responseData.scope);
+    console.log('Scope value:', responseData.scope);
+    console.log('=== END OURA RESPONSE ===');
 
     return responseData;
   } catch (error) {

@@ -5,14 +5,8 @@ export async function GET(
   const resolvedParams = await params;
   const path = resolvedParams.path.join('/');
 
-  // Devices endpoint uses different base URL than activities
-  let baseUrl: string;
-  if (path.includes('devices')) {
-    baseUrl = 'https://api.fitbit.com'; // No /1/ for devices
-  } else {
-    baseUrl = 'https://api.fitbit.com/1'; // /1/ for activities and other endpoints
-  }
-
+  // All Fitbit API endpoints use /1/ base URL
+  const baseUrl = 'https://api.fitbit.com/1';
   const upstreamUrl = new URL(`${baseUrl}/${path}${new URL(req.url).search}`);
 
   console.log(

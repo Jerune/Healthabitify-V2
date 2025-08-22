@@ -65,20 +65,12 @@ export async function POST(request: NextRequest) {
         'Fitbit refresh token length:',
         refreshToken ? refreshToken.length : 0
       );
+      console.log('Fitbit refresh token full value:', refreshToken);
 
       if (!refreshToken) {
         console.log('No Fitbit refresh token found in cookies');
         return NextResponse.json(
           { error: 'No refresh token available' },
-          { status: 400 }
-        );
-      }
-
-      // Check if refresh token looks valid (should be a JWT-like string)
-      if (refreshToken.length < 50) {
-        console.log('Fitbit refresh token seems too short, might be invalid');
-        return NextResponse.json(
-          { error: 'Invalid refresh token format' },
           { status: 400 }
         );
       }
@@ -138,20 +130,12 @@ export async function POST(request: NextRequest) {
         'Oura refresh token length:',
         refreshToken ? refreshToken.length : 0
       );
+      console.log('Oura refresh token full value:', refreshToken);
 
       if (!refreshToken) {
         console.log('No Oura refresh token found in cookies');
         return NextResponse.json(
           { error: 'No refresh token available' },
-          { status: 400 }
-        );
-      }
-
-      // Check if refresh token looks valid (should be a JWT-like string)
-      if (refreshToken.length < 50) {
-        console.log('Oura refresh token seems too short, might be invalid');
-        return NextResponse.json(
-          { error: 'Invalid refresh token format' },
           { status: 400 }
         );
       }
