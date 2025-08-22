@@ -68,10 +68,17 @@ export async function POST(request: NextRequest) {
       console.log('Fitbit refresh token full value:', refreshToken);
 
       if (!refreshToken) {
-        console.log('No Fitbit refresh token found in database');
+        console.log(
+          'No Fitbit refresh token found in database - redirecting to re-authorization'
+        );
         return NextResponse.json(
-          { error: 'No refresh token available' },
-          { status: 400 }
+          {
+            error: 'No refresh token available',
+            action: 'reauthorize',
+            platform: 'fitbit',
+            authUrl: '/api/fitbit/auth',
+          },
+          { status: 401 }
         );
       }
 
@@ -152,10 +159,17 @@ export async function POST(request: NextRequest) {
       console.log('Oura refresh token full value:', refreshToken);
 
       if (!refreshToken) {
-        console.log('No Oura refresh token found in database');
+        console.log(
+          'No Oura refresh token found in database - redirecting to re-authorization'
+        );
         return NextResponse.json(
-          { error: 'No refresh token available' },
-          { status: 400 }
+          {
+            error: 'No refresh token available',
+            action: 'reauthorize',
+            platform: 'oura',
+            authUrl: '/api/oura/auth',
+          },
+          { status: 401 }
         );
       }
 

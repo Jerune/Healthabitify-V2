@@ -224,16 +224,22 @@ function AppStateInit() {
       });
 
       if (response.ok) {
+        console.log('Fitbit token refreshed successfully');
         // Refresh wearables data to get updated expiration date
         await initializeWearables();
       } else {
         const errorData = await response.json();
         console.error('Fitbit token refresh failed:', errorData);
-        // Don't throw error - continue with data loading using existing token
+
+        // Check if we need to re-authorize
+        if (errorData.action === 'reauthorize') {
+          console.log('Redirecting to Fitbit re-authorization...');
+          window.location.href = errorData.authUrl;
+          return;
+        }
       }
     } catch (error) {
       console.error('Failed to refresh Fitbit token:', error);
-      // Don't throw error - continue with data loading using existing token
     }
   }
 
@@ -247,16 +253,22 @@ function AppStateInit() {
       });
 
       if (response.ok) {
+        console.log('Oura token refreshed successfully');
         // Refresh wearables data to get updated expiration date
         await initializeWearables();
       } else {
         const errorData = await response.json();
         console.error('Oura token refresh failed:', errorData);
-        // Don't throw error - continue with data loading using existing token
+
+        // Check if we need to re-authorize
+        if (errorData.action === 'reauthorize') {
+          console.log('Redirecting to Oura re-authorization...');
+          window.location.href = errorData.authUrl;
+          return;
+        }
       }
     } catch (error) {
       console.error('Failed to refresh Oura token:', error);
-      // Don't throw error - continue with data loading using existing token
     }
   }
 
