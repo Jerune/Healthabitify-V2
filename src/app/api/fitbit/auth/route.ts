@@ -22,7 +22,7 @@ export async function GET(request: Request) {
   const url = new URL(request.url);
   const scope =
     url.searchParams.get('scope') ||
-    'activity heartrate nutrition sleep profile devices';
+    'activity heartrate nutrition sleep profile devices settings';
 
   const clientId = process.env.FITBIT_CLIENT_ID;
   const redirectUri = process.env.FITBIT_REDIRECT_URI;
