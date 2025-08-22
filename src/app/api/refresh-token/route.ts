@@ -37,11 +37,11 @@ export async function POST(request: NextRequest) {
       // Update Firebase with new token and expiration date
       try {
         const expiresAt = new Date();
-        expiresAt.setSeconds(expiresAt.getSeconds() + tokens.expires_in);
+        expiresAt.setTime(expiresAt.getTime() + tokens.expires_in * 1000);
         const tokenExpiresOn = expiresAt.toISOString().split('T')[0]; // YYYY-MM-DD
 
         await updateWearables('fitbit', 'token', tokens.access_token);
-        await updateWearables('fitbit', 'tokenExpiresOn', tokenExpiresOn);
+        await updateWearables('fitbit', 'tokenExpiresOn', tokenExpiresOn); // Store calculated date for validation
       } catch (error) {
         console.error('Failed to update Fitbit token in Firebase:', error);
       }
@@ -68,11 +68,11 @@ export async function POST(request: NextRequest) {
       // Update Firebase with new token and expiration date
       try {
         const expiresAt = new Date();
-        expiresAt.setSeconds(expiresAt.getSeconds() + tokens.expires_in);
+        expiresAt.setTime(expiresAt.getTime() + tokens.expires_in * 1000);
         const tokenExpiresOn = expiresAt.toISOString().split('T')[0]; // YYYY-MM-DD
 
         await updateWearables('oura', 'token', tokens.access_token);
-        await updateWearables('oura', 'tokenExpiresOn', tokenExpiresOn);
+        await updateWearables('oura', 'tokenExpiresOn', tokenExpiresOn); // Store calculated date for validation
       } catch (error) {
         console.error('Failed to update Oura token in Firebase:', error);
       }

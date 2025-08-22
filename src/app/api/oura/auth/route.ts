@@ -21,7 +21,8 @@ function generateVerifierAndChallenge() {
 export async function GET(request: Request) {
   const url = new URL(request.url);
   const scope =
-    url.searchParams.get('scope') || 'daily heartrate workout session';
+    url.searchParams.get('scope') ||
+    'daily heartrate workout session spo2Daily';
 
   const clientId = process.env.OURA_CLIENT_ID;
   const redirectUri = process.env.OURA_REDIRECT_URI;

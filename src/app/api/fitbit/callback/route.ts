@@ -56,20 +56,37 @@ export async function GET(req: Request) {
   }
 
   const tokenJson = await tokenRes.json();
+  console.log('Fitbit token response:', JSON.stringify(tokenJson, null, 2));
+
   const accessToken = tokenJson.access_token as string;
   const refreshToken = tokenJson.refresh_token as string;
   const userId = tokenJson.user_id as string;
-  const expiresIn = tokenJson.expires_in as number;
+  let expiresIn = tokenJson.expires_in as number;
 
-  // Calculate expiration date in YYYY-MM-DD format
+  console.log('Fitbit token details:', {
+    accessToken: accessToken ? 'present' : 'missing',
+    refreshToken: refreshToken ? 'present' : 'missing',
+    userId: userId || 'missing',
+    expiresIn: expiresIn || 'missing',
+  });
+
+  // Handle case where expires_in might not be present
+  if (!expiresIn) {
+    console.warn('Fitbit API did not return expires_in, using default 30 days');
+    // Default to 30 days if not provided
+    const defaultExpiresIn = 30 * 24 * 60 * 60; // 30 days in seconds
+    expiresIn = defaultExpiresIn;
+  }
+
+  // Calculate expiration date in YYYY-MM-DD format for validation
   const expiresAt = new Date();
-  expiresAt.setSeconds(expiresAt.getSeconds() + expiresIn);
+  expiresAt.setTime(expiresAt.getTime() + expiresIn * 1000);
   const tokenExpiresOn = expiresAt.toISOString().split('T')[0]; // YYYY-MM-DD
 
-  // Update Firebase wearables collection with new token and expiration
+  // Update Firebase wearables collection with new token and expiration date
   try {
     await updateWearables('fitbit', 'token', accessToken);
-    await updateWearables('fitbit', 'tokenExpiresOn', tokenExpiresOn);
+    await updateWearables('fitbit', 'tokenExpiresOn', tokenExpiresOn); // Store calculated date for validation
   } catch (error) {
     console.error('Failed to update Fitbit token:', error);
   }
