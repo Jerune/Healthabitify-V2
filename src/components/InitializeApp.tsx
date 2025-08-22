@@ -199,31 +199,17 @@ function AppStateInit() {
 
   async function refreshTokensIfNeeded() {
     try {
-      // Check if Fitbit token needs refresh (expires in less than 2 weeks)
-      if (devices.fitbit.tokenExpiresOn) {
-        const expiresAt = new Date(devices.fitbit.tokenExpiresOn);
-        const now = new Date();
-        const twoWeeksFromNow = new Date();
-        twoWeeksFromNow.setDate(now.getDate() + 14); // 2 weeks
+      console.log('Refreshing tokens before data load...');
 
-        if (expiresAt <= twoWeeksFromNow) {
-          await refreshFitbitToken();
-        }
-      }
+      // Always refresh Fitbit token before data load
+      await refreshFitbitToken();
 
-      // Check if Oura token needs refresh (expires in less than 2 weeks)
-      if (devices.oura.tokenExpiresOn) {
-        const expiresAt = new Date(devices.oura.tokenExpiresOn);
-        const now = new Date();
-        const twoWeeksFromNow = new Date();
-        twoWeeksFromNow.setDate(now.getDate() + 14); // 2 weeks
+      // Always refresh Oura token before data load
+      await refreshOuraToken();
 
-        if (expiresAt <= twoWeeksFromNow) {
-          await refreshOuraToken();
-        }
-      }
+      console.log('Token refresh completed');
     } catch (error) {
-      console.error('Error refreshing wearable token:', error);
+      console.error('Error refreshing wearable tokens:', error);
     }
   }
 
@@ -238,15 +224,16 @@ function AppStateInit() {
       });
 
       if (response.ok) {
-        console.log('Fitbit token refreshed successfully');
         // Refresh wearables data to get updated expiration date
         await initializeWearables();
       } else {
         const errorData = await response.json();
         console.error('Fitbit token refresh failed:', errorData);
+        // Don't throw error - continue with data loading using existing token
       }
     } catch (error) {
       console.error('Failed to refresh Fitbit token:', error);
+      // Don't throw error - continue with data loading using existing token
     }
   }
 
@@ -260,15 +247,16 @@ function AppStateInit() {
       });
 
       if (response.ok) {
-        console.log('Oura token refreshed successfully');
         // Refresh wearables data to get updated expiration date
         await initializeWearables();
       } else {
         const errorData = await response.json();
         console.error('Oura token refresh failed:', errorData);
+        // Don't throw error - continue with data loading using existing token
       }
     } catch (error) {
       console.error('Failed to refresh Oura token:', error);
+      // Don't throw error - continue with data loading using existing token
     }
   }
 
@@ -282,7 +270,6 @@ function AppStateInit() {
   async function updateData() {
     dispatch(changeLoadingStatus(true));
 
-    // Check and refresh tokens if needed before making API calls
     await refreshTokensIfNeeded();
 
     await initializeServiceAPIs();
