@@ -74,7 +74,6 @@ function AppStateInit() {
   }
 
   async function initializeServiceAPIs() {
-    dispatch(changeLoadingMessage('Gathering new data from wearables'));
     const yesterdayString = getYesterdaysDateAsString();
     // Checks if there is any new dates with possible new data
     if (devices.fitbit.lastUpdated <= yesterdayString) {
@@ -124,7 +123,7 @@ function AppStateInit() {
         devices.oura.lastUpdated
       )) as OuraRawData[];
 
-      if (typeof ouraDataFromAPI[0] !== 'string') {
+      if (typeof ouraDataFromAPI !== 'string') {
         dispatch(changeLoadingMessage('Transforming Oura data'));
 
         let newOuraDatapoints: DataPoint[] = [];
@@ -159,17 +158,11 @@ function AppStateInit() {
           ouraDataFromAPI[0]
         );
       }
-    } else {
-      console.log('Oura data loading condition NOT met:', {
-        lastUpdated: devices.oura.lastUpdated,
-        yesterdayString,
-        condition: devices.oura.lastUpdated <= yesterdayString,
-      });
     }
   }
 
   async function initializeAverages() {
-    dispatch(changeLoadingMessage('Running data calculations'));
+    dispatch(changeLoadingMessage('Loading averages...'));
     // Get lastUpdated date with earliest date
     const earliestLastUpdated =
       devices.fitbit.lastUpdated < devices.oura.lastUpdated
@@ -194,7 +187,6 @@ function AppStateInit() {
     // Builds all averages to be used in the app up to current date
     // Runs on 2 second timeout to make sure new averages have been added
     // To-Do: Find alternative for setTimeOut()
-    dispatch(changeLoadingMessage('Calculating final results'));
     setTimeout(async () => {
       const averageStoreData = await buildAverages(datesToCheckFor);
       dispatch(initAverages(averageStoreData));

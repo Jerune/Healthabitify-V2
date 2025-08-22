@@ -72,7 +72,7 @@ function HeaderNav() {
     <>
       <header className='flex flex-row fixed top-0 justify-between items-center h-12 w-full bg-palette-600 text-white border-b border-solid border-palette-600 z-20'>
         <div className='flex flex-row items-center'>
-          <Link href='/'>
+          <Link href='/dashboard'>
             <Image className='h-12 w-16' src={logo} alt='Healthability logo' />
           </Link>
           <LogoText />
