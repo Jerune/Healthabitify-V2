@@ -20,18 +20,8 @@ function generateVerifierAndChallenge() {
   return { verifier, challenge };
 }
 
-export async function GET(request: Request) {
-  const url = new URL(request.url);
-  const requestedScope = url.searchParams.get('scope');
-  const scope = requestedScope || OAUTH_SCOPES.fitbit;
-
-  console.log('Fitbit OAuth Debug:', {
-    requestedScope: requestedScope || 'none',
-    defaultScope: OAUTH_SCOPES.fitbit,
-    finalScope: scope,
-    allParams: Object.fromEntries(url.searchParams.entries()),
-  });
-
+export async function GET() {
+  const scope = OAUTH_SCOPES.fitbit;
   const clientId = process.env.FITBIT_CLIENT_ID;
   const redirectUri = process.env.FITBIT_REDIRECT_URI;
 

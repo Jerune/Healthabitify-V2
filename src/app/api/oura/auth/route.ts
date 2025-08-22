@@ -20,17 +20,8 @@ function generateVerifierAndChallenge() {
   return { verifier, challenge };
 }
 
-export async function GET(request: Request) {
-  const url = new URL(request.url);
-  const requestedScope = url.searchParams.get('scope');
-  const scope = requestedScope || OAUTH_SCOPES.oura;
-
-  console.log('Oura OAuth Debug:', {
-    requestedScope: requestedScope || 'none',
-    defaultScope: OAUTH_SCOPES.oura,
-    finalScope: scope,
-    allParams: Object.fromEntries(url.searchParams.entries()),
-  });
+export async function GET() {
+  const scope = OAUTH_SCOPES.oura;
 
   const clientId = process.env.OURA_CLIENT_ID;
   const redirectUri = process.env.OURA_REDIRECT_URI;
