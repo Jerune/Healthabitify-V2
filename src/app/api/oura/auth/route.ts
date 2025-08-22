@@ -2,6 +2,8 @@ import crypto from 'node:crypto';
 
 import { NextResponse } from 'next/server';
 
+import { OAUTH_SCOPES } from '@/services/oauthConfig';
+
 function base64UrlEncode(buffer: Buffer) {
   return buffer
     .toString('base64')
@@ -20,9 +22,15 @@ function generateVerifierAndChallenge() {
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
-  const scope =
-    url.searchParams.get('scope') ||
-    'daily heartrate workout session spo2Daily';
+  const requestedScope = url.searchParams.get('scope');
+  const scope = requestedScope || OAUTH_SCOPES.oura;
+
+  console.log('Oura OAuth Debug:', {
+    requestedScope: requestedScope || 'none',
+    defaultScope: OAUTH_SCOPES.oura,
+    finalScope: scope,
+    allParams: Object.fromEntries(url.searchParams.entries()),
+  });
 
   const clientId = process.env.OURA_CLIENT_ID;
   const redirectUri = process.env.OURA_REDIRECT_URI;
@@ -61,6 +69,23 @@ export async function GET(request: Request) {
     sameSite: 'lax',
     maxAge: 10 * 60,
     path: '/',
+  });
+
+  // Build Oura authorization URL with PKCE
+  const authUrl = new URL('https://cloud.ouraring.com/oauth/authorize');
+  authUrl.searchParams.set('client_id', clientId);
+  authUrl.searchParams.set('response_type', 'code');
+  authUrl.searchParams.set('code_challenge', challenge);
+  authUrl.searchParams.set('code_challenge_method', 'S256');
+  authUrl.searchParams.set('scope', scope);
+  authUrl.searchParams.set('redirect_uri', redirectUri);
+  authUrl.searchParams.set('state', state);
+
+  console.log('Oura Authorization URL Debug:', {
+    finalScope: scope,
+    authUrl: authUrl.toString(),
+    scopeParam: authUrl.searchParams.get('scope'),
+    scopeInUrl: authUrl.toString().includes('scope='),
   });
 
   return res;

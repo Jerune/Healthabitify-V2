@@ -2,6 +2,8 @@ import crypto from 'node:crypto';
 
 import { NextResponse } from 'next/server';
 
+import { OAUTH_SCOPES } from '@/services/oauthConfig';
+
 function base64UrlEncode(buffer: Buffer) {
   return buffer
     .toString('base64')
@@ -20,9 +22,15 @@ function generateVerifierAndChallenge() {
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
-  const scope =
-    url.searchParams.get('scope') ||
-    'activity heartrate location nutrition oxygen_saturation profile respiratory_rate settings sleep social temperature weight';
+  const requestedScope = url.searchParams.get('scope');
+  const scope = requestedScope || OAUTH_SCOPES.fitbit;
+
+  console.log('Fitbit OAuth Debug:', {
+    requestedScope: requestedScope || 'none',
+    defaultScope: OAUTH_SCOPES.fitbit,
+    finalScope: scope,
+    allParams: Object.fromEntries(url.searchParams.entries()),
+  });
 
   const clientId = process.env.FITBIT_CLIENT_ID;
   const redirectUri = process.env.FITBIT_REDIRECT_URI;
@@ -45,6 +53,13 @@ export async function GET(request: Request) {
   authUrl.searchParams.set('scope', scope);
   authUrl.searchParams.set('redirect_uri', redirectUri);
   authUrl.searchParams.set('state', state);
+
+  console.log('Fitbit Authorization URL Debug:', {
+    finalScope: scope,
+    authUrl: authUrl.toString(),
+    scopeParam: authUrl.searchParams.get('scope'),
+    scopeInUrl: authUrl.toString().includes('scope='),
+  });
 
   const res = NextResponse.redirect(authUrl.toString());
 
