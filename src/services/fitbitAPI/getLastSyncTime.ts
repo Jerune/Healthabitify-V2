@@ -8,13 +8,32 @@ async function getLastSyncTime(token: string) {
   };
 
   try {
+    console.log(
+      'Calling Fitbit devices API with token:',
+      token ? 'present' : 'missing'
+    );
     const response = await fetch('/api/fitbit/user/-/devices.json', headers);
-    const responseData = await response.json();
-    const date = responseData[0].lastSyncTime.split('T').slice(0, 1).join();
+    console.log('Fitbit devices API response status:', response.status);
 
-    return date;
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Fitbit devices API error:', errorText);
+      return 'error';
+    }
+
+    const responseData = await response.json();
+    console.log('Fitbit devices API response data:', responseData);
+
+    if (responseData && responseData[0] && responseData[0].lastSyncTime) {
+      const date = responseData[0].lastSyncTime.split('T').slice(0, 1).join();
+      console.log('Extracted lastSyncTime:', date);
+      return date;
+    } else {
+      console.error('No lastSyncTime found in response:', responseData);
+      return 'error';
+    }
   } catch (error) {
-    console.log(error);
+    console.error('Error calling Fitbit devices API:', error);
   }
 
   return 'error';

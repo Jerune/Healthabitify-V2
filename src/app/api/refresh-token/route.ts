@@ -9,8 +9,10 @@ import {
 export async function POST(request: NextRequest) {
   try {
     const { platform } = await request.json();
+    console.log('Refresh token request for platform:', platform);
 
     if (!platform || (platform !== 'fitbit' && platform !== 'oura')) {
+      console.log('Invalid platform:', platform);
       return NextResponse.json({ error: 'Invalid platform' }, { status: 400 });
     }
 
@@ -22,10 +24,15 @@ export async function POST(request: NextRequest) {
         .map(([k, ...v]) => [k, decodeURIComponent(v.join('='))])
     );
 
+    console.log('Available cookies:', Object.keys(cookies));
+    console.log('Cookie header:', request.headers.get('cookie'));
+
     if (platform === 'fitbit') {
       const refreshToken = cookies['fitbit_refresh_token'];
+      console.log('Fitbit refresh token present:', !!refreshToken);
 
       if (!refreshToken) {
+        console.log('No Fitbit refresh token found in cookies');
         return NextResponse.json(
           { error: 'No refresh token available' },
           { status: 400 }
@@ -55,8 +62,10 @@ export async function POST(request: NextRequest) {
       });
     } else if (platform === 'oura') {
       const refreshToken = cookies['oura_refresh_token'];
+      console.log('Oura refresh token present:', !!refreshToken);
 
       if (!refreshToken) {
+        console.log('No Oura refresh token found in cookies');
         return NextResponse.json(
           { error: 'No refresh token available' },
           { status: 400 }

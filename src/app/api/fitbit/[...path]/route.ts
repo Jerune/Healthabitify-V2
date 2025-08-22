@@ -3,10 +3,25 @@ export async function GET(
   { params }: { params: Promise<{ path: string[] }> }
 ) {
   const resolvedParams = await params;
-  const upstreamUrl = new URL(
-    `https://api.fitbit.com/1/${resolvedParams.path.join('/')}${
-      new URL(req.url).search
-    }`
+  const path = resolvedParams.path.join('/');
+
+  // Devices endpoint uses different base URL than activities
+  let baseUrl: string;
+  if (path.includes('devices')) {
+    baseUrl = 'https://api.fitbit.com'; // No /1/ for devices
+  } else {
+    baseUrl = 'https://api.fitbit.com/1'; // /1/ for activities and other endpoints
+  }
+
+  const upstreamUrl = new URL(`${baseUrl}/${path}${new URL(req.url).search}`);
+
+  console.log(
+    'Fitbit API proxy - Path:',
+    path,
+    'Base URL:',
+    baseUrl,
+    'Full URL:',
+    upstreamUrl.toString()
   );
 
   // Read access token from cookie set during OAuth callback
@@ -18,6 +33,8 @@ export async function GET(
       .map(([k, ...v]) => [k, decodeURIComponent(v.join('='))])
   ) as Record<string, string>;
   const accessToken = cookies['fitbit_access_token'];
+
+  console.log('Fitbit access token present:', !!accessToken);
 
   // Allow Authorization header as fallback for testing
   const headerAuth = req.headers.get('authorization');
@@ -40,6 +57,8 @@ export async function GET(
     },
     cache: 'no-store',
   });
+
+  console.log('Fitbit API response status:', upstreamResponse.status);
 
   return new Response(upstreamResponse.body, {
     status: upstreamResponse.status,

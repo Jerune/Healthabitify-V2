@@ -55,21 +55,13 @@ export async function GET(req: Request) {
 
   const accessToken = tokenJson.access_token as string;
   const refreshToken = tokenJson.refresh_token as string; // Check if Oura provides refresh tokens
-  let expiresIn = tokenJson.expires_in as number;
+  const expiresIn = tokenJson.expires_in as number;
 
   console.log('Oura token details:', {
     accessToken: accessToken ? 'present' : 'missing',
     refreshToken: refreshToken ? 'present' : 'missing',
     expiresIn: expiresIn || 'missing',
   });
-
-  // Handle case where expires_in might not be present
-  if (!expiresIn) {
-    console.warn('Oura API did not return expires_in, using default 30 days');
-    // Default to 30 days if not provided
-    const defaultExpiresIn = 30 * 24 * 60 * 60; // 30 days in seconds
-    expiresIn = defaultExpiresIn;
-  }
 
   // Calculate expiration date in YYYY-MM-DD format for validation
   const expiresAt = new Date();
