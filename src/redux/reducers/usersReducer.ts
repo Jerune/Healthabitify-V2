@@ -11,10 +11,12 @@ const activeUser = {
     oura: {
       token: '',
       lastUpdated: '',
+      tokenExpiresOn: '',
     },
     fitbit: {
       token: '',
       lastUpdated: '',
+      tokenExpiresOn: '',
     },
   },
 };
@@ -45,10 +47,12 @@ export const userSlice = createSlice({
           oura: {
             token: oura.token,
             lastUpdated: oura.lastUpdated,
+            tokenExpiresOn: oura.tokenExpiresOn,
           },
           fitbit: {
             token: fitbit.token,
             lastUpdated: fitbit.lastUpdated,
+            tokenExpiresOn: fitbit.tokenExpiresOn,
           },
         },
       };

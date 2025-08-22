@@ -52,20 +52,52 @@ export async function GET(req: Request) {
 
   const tokenJson = await tokenRes.json();
   const accessToken = tokenJson.access_token as string;
+  const refreshToken = tokenJson.refresh_token as string; // Check if Oura provides refresh tokens
+  const expiresIn = tokenJson.expires_in as number;
 
-  // Update Firebase wearables collection with new token
+  // Calculate expiration date in YYYY-MM-DD format
+  const expiresAt = new Date();
+  expiresAt.setSeconds(expiresAt.getSeconds() + expiresIn);
+  const tokenExpiresOn = expiresAt.toISOString().split('T')[0]; // YYYY-MM-DD
+
+  // Update Firebase wearables collection with new token and expiration
   try {
     await updateWearables('oura', 'token', accessToken);
+    await updateWearables('oura', 'tokenExpiresOn', tokenExpiresOn);
   } catch (error) {
     console.error('Failed to update Oura access token:', error);
   }
 
   const res = NextResponse.redirect(new URL('/wearable-auth-success', req.url));
+
+  // Calculate expiration time in seconds from now
+  const expiresAtCookie = Math.floor(Date.now() / 1000) + expiresIn;
+
   res.cookies.set('oura_access_token', accessToken, {
     httpOnly: true,
     secure: true,
     sameSite: 'lax',
-    maxAge: 60 * 60 * 24 * 30,
+    maxAge: expiresIn, // Use actual expiration from API
+    path: '/',
+  });
+
+  // Store refresh token if available (Oura might not provide this)
+  if (refreshToken) {
+    res.cookies.set('oura_refresh_token', refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'lax',
+      maxAge: 60 * 60 * 24 * 365, // 1 year
+      path: '/',
+    });
+  }
+
+  // Store expiration timestamp for refresh logic
+  res.cookies.set('oura_token_expires_at', expiresAtCookie.toString(), {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'lax',
+    maxAge: 60 * 60 * 24 * 365, // 1 year
     path: '/',
   });
 

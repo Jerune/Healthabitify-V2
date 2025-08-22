@@ -205,6 +205,73 @@ function AppStateInit() {
     // Function that can be used to perform separate manual adjustments
   }
 
+  async function refreshTokensIfNeeded() {
+    try {
+      // Check if Fitbit token needs refresh (expires in less than 2 weeks)
+      if (devices.fitbit.tokenExpiresOn) {
+        const expiresAt = new Date(devices.fitbit.tokenExpiresOn);
+        const now = new Date();
+        const twoWeeksFromNow = new Date();
+        twoWeeksFromNow.setDate(now.getDate() + 14); // 2 weeks
+
+        if (expiresAt <= twoWeeksFromNow) {
+          await refreshFitbitToken();
+        }
+      }
+
+      // Check if Oura token needs refresh (expires in less than 2 weeks)
+      if (devices.oura.tokenExpiresOn) {
+        const expiresAt = new Date(devices.oura.tokenExpiresOn);
+        const now = new Date();
+        const twoWeeksFromNow = new Date();
+        twoWeeksFromNow.setDate(now.getDate() + 14); // 2 weeks
+
+        if (expiresAt <= twoWeeksFromNow) {
+          await refreshOuraToken();
+        }
+      }
+    } catch (error) {
+      console.error('Error refreshing wearable token:', error);
+    }
+  }
+
+  // Simple token refresh functions
+  async function refreshFitbitToken() {
+    try {
+      const response = await fetch('/api/refresh-token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ platform: 'fitbit' }),
+      });
+
+      if (response.ok) {
+        console.log('Fitbit token refreshed successfully');
+        // Refresh wearables data to get updated expiration date
+        await initializeWearables();
+      }
+    } catch (error) {
+      console.error('Failed to refresh Fitbit token:', error);
+    }
+  }
+
+  async function refreshOuraToken() {
+    try {
+      const response = await fetch('/api/refresh-token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ platform: 'oura' }),
+      });
+
+      if (response.ok) {
+        console.log('Oura token refreshed successfully');
+        // Refresh wearables data to get updated expiration date
+        await initializeWearables();
+      }
+    } catch (error) {
+      console.error('Failed to refresh Oura token:', error);
+    }
+  }
+
   async function initApp() {
     dispatch(changeLoadingStatus(true));
     await initializeMetrics();
@@ -214,6 +281,10 @@ function AppStateInit() {
 
   async function updateData() {
     dispatch(changeLoadingStatus(true));
+
+    // Check and refresh tokens if needed before making API calls
+    await refreshTokensIfNeeded();
+
     await initializeServiceAPIs();
     await initializeWearables();
     await initializeAverages();

@@ -28,6 +28,7 @@ export type Wearable = {
   userId: string;
   token: string;
   lastUpdated: string;
+  tokenExpiresOn: string;
 };
 
 export type Metric = {

@@ -59,10 +59,17 @@ export async function GET(req: Request) {
   const accessToken = tokenJson.access_token as string;
   const refreshToken = tokenJson.refresh_token as string;
   const userId = tokenJson.user_id as string;
+  const expiresIn = tokenJson.expires_in as number;
 
-  // Update Firebase wearables collection with new token
+  // Calculate expiration date in YYYY-MM-DD format
+  const expiresAt = new Date();
+  expiresAt.setSeconds(expiresAt.getSeconds() + expiresIn);
+  const tokenExpiresOn = expiresAt.toISOString().split('T')[0]; // YYYY-MM-DD
+
+  // Update Firebase wearables collection with new token and expiration
   try {
     await updateWearables('fitbit', 'token', accessToken);
+    await updateWearables('fitbit', 'tokenExpiresOn', tokenExpiresOn);
   } catch (error) {
     console.error('Failed to update Fitbit token:', error);
   }
@@ -74,11 +81,14 @@ export async function GET(req: Request) {
     process.env.NODE_ENV === 'production' ||
     (process.env.FITBIT_REDIRECT_URI || '').startsWith('https://');
 
+  // Calculate expiration time in seconds from now
+  const expiresAtCookie = Math.floor(Date.now() / 1000) + expiresIn;
+
   res.cookies.set('fitbit_access_token', accessToken, {
     httpOnly: true,
     secure: isProd,
     sameSite: 'lax',
-    maxAge: 60 * 60 * 24 * 30, // 30 days
+    maxAge: expiresIn, // Use actual expiration from API
     path: '/',
   });
 
@@ -91,6 +101,15 @@ export async function GET(req: Request) {
   });
 
   res.cookies.set('fitbit_user_id', userId, {
+    httpOnly: true,
+    secure: isProd,
+    sameSite: 'lax',
+    maxAge: 60 * 60 * 24 * 365, // 1 year
+    path: '/',
+  });
+
+  // Store expiration timestamp for refresh logic
+  res.cookies.set('fitbit_token_expires_at', expiresAtCookie.toString(), {
     httpOnly: true,
     secure: isProd,
     sameSite: 'lax',
