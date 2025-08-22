@@ -53,8 +53,6 @@ export async function refreshFitbitToken(refreshToken: string) {
     console.log('Response keys:', Object.keys(responseData));
     console.log('Access token present:', !!responseData.access_token);
     console.log('Refresh token present:', !!responseData.refresh_token);
-    console.log('Expires in present:', !!responseData.expires_in);
-    console.log('Expires in value:', responseData.expires_in);
     console.log('User ID present:', !!responseData.user_id);
     console.log('User ID value:', responseData.user_id);
     console.log('=== END FITBIT RESPONSE ===');

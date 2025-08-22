@@ -27,8 +27,13 @@ export type Wearable = {
   id: string;
   userId: string;
   token: string;
+  refreshToken: string;
   lastUpdated: string;
-  tokenExpiresOn: string;
+};
+
+export type WearablesData = {
+  fitbit: Wearable;
+  oura: Wearable;
 };
 
 export type Metric = {

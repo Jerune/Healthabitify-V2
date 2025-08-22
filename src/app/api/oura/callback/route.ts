@@ -53,61 +53,35 @@ export async function GET(req: Request) {
   const tokenJson = await tokenRes.json();
   console.log('Oura token response:', JSON.stringify(tokenJson, null, 2));
 
-  const accessToken = tokenJson.access_token as string;
-  const refreshToken = tokenJson.refresh_token as string; // Check if Oura provides refresh tokens
-  const expiresIn = tokenJson.expires_in as number;
+  const accessToken = tokenJson.access_token;
+  const refreshToken = tokenJson.refresh_token;
 
-  console.log('Oura token details:', {
-    accessToken: accessToken ? 'present' : 'missing',
-    refreshToken: refreshToken ? 'present' : 'missing',
-    expiresIn: expiresIn || 'missing',
-  });
-
-  // Calculate expiration date in YYYY-MM-DD format for validation
-  const expiresAt = new Date();
-  expiresAt.setTime(expiresAt.getTime() + expiresIn * 1000);
-  const tokenExpiresOn = expiresAt.toISOString().split('T')[0]; // YYYY-MM-DD
-
-  // Update Firebase wearables collection with new token and expiration date
+  // Update Firebase wearables collection with new tokens
   try {
     await updateWearables('oura', 'token', accessToken);
-    await updateWearables('oura', 'tokenExpiresOn', tokenExpiresOn); // Store calculated date for validation
+    await updateWearables('oura', 'refreshToken', refreshToken);
   } catch (error) {
     console.error('Failed to update Oura access token:', error);
   }
 
   const res = NextResponse.redirect(new URL('/wearable-auth-success', req.url));
 
-  // Calculate expiration time in seconds from now
-  const expiresAtCookie = Math.floor(Date.now() / 1000) + expiresIn;
-
+  // Store tokens in cookies for immediate use
   res.cookies.set('oura_access_token', accessToken, {
     httpOnly: true,
     secure: true,
     sameSite: 'lax',
-    maxAge: expiresIn, // Use actual expiration from API
     path: '/',
   });
 
-  // Store refresh token if available (Oura might not provide this)
   if (refreshToken) {
     res.cookies.set('oura_refresh_token', refreshToken, {
       httpOnly: true,
       secure: true,
       sameSite: 'lax',
-      maxAge: 60 * 60 * 24 * 365, // 1 year
       path: '/',
     });
   }
-
-  // Store expiration timestamp for refresh logic
-  res.cookies.set('oura_token_expires_at', expiresAtCookie.toString(), {
-    httpOnly: true,
-    secure: true,
-    sameSite: 'lax',
-    maxAge: 60 * 60 * 24 * 365, // 1 year
-    path: '/',
-  });
 
   // Clean temp cookies
   res.cookies.set('oura_oauth_state', '', { maxAge: 0, path: '/' });
