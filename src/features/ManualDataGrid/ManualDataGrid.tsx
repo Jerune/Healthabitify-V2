@@ -90,16 +90,13 @@ function ManualDataGrid({ labs }: ManualDataProps) {
         }
 
         const columns = await buildManualColumns(dates, labs);
-        console.log('ManualDataGrid - columns:', columns);
         setActiveColumns(columns);
         const datapoints = await getManualDatapointsByDate(
           currentDateTime,
           activeMetrics,
           labs
         );
-        console.log('ManualDataGrid - datapoints:', datapoints);
         const rows = buildManualRows(datapoints, dates);
-        console.log('ManualDataGrid - rows:', rows);
         setActiveRows(rows);
       }
     }
@@ -169,7 +166,9 @@ function ManualDataGrid({ labs }: ManualDataProps) {
   const onCellValueChanged = useCallback((params: any) => {
     const { colDef, newValue, data } = params;
     const columnId = colDef.field;
-    const rowId = data.id;
+    const cellData = data[columnId];
+    const datapointId =
+      cellData && typeof cellData === 'object' ? cellData.id : null;
     const metricName = data.metric;
     const metric = metricName
       ? metricName.split(' ').join('-').toLowerCase()
@@ -177,7 +176,7 @@ function ManualDataGrid({ labs }: ManualDataProps) {
 
     if (newValue !== undefined && newValue !== null && newValue !== '') {
       setDatapointsToEdit(prevState => {
-        const idToChange = rowId || 'new';
+        const idToChange = datapointId || 'new';
         return [
           ...prevState,
           { date: columnId, id: idToChange, value: newValue, metric },

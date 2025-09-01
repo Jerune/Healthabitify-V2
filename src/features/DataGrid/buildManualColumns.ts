@@ -16,6 +16,13 @@ async function buildManualColumns(
     filter: false,
     resizable: true,
     editable: false,
+    valueGetter: params => {
+      const cellData = params.data[date];
+      if (cellData && typeof cellData === 'object' && 'value' in cellData) {
+        return cellData.value;
+      }
+      return cellData || '';
+    },
     cellStyle: {
       textAlign: 'left',
     },

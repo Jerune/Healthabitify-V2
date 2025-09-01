@@ -98,7 +98,11 @@ export type AGGridRow = {
   id: string;
   metric: string;
   reference?: string;
-  [key: string]: string | number | undefined;
+  [key: string]:
+    | string
+    | number
+    | undefined
+    | { value: string | number; id: string | null };
 };
 
 export type MonthlyRowData = {

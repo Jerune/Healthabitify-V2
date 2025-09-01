@@ -32,7 +32,10 @@ function buildManualRows(
     dates.forEach(date => {
       for (let i = 0; i < weeklyData.length; i += 1) {
         if (weeklyData[i].date === date) {
-          row[date] = weeklyData[i].value;
+          row[date] = {
+            value: weeklyData[i].value,
+            id: weeklyData[i].id,
+          };
         }
       }
     });
