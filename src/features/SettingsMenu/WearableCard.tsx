@@ -16,22 +16,18 @@ function WearableCard({ activeCategory }: WearableCardProps) {
   if (id !== '') {
     return (
       <div className='w-full p-4 rounded-lg bg-white flex flex-col items-start justify-center text-sm shadow-lg gap-4'>
-        <h3>{name}</h3>
+        <h2 className='text-xl'>{name}</h2>
         <div className='flex flex-row gap-4 w-full'>
-          <label className='w-[15%]' id='token'>
-            Access Token
-          </label>
-          <input className='w-[85%]' name='token' value={devices[id].token} />
+          <span className='w-[15%]'>Access Token</span>
+          <span className='w-[85%] overflow-hidden text-ellipsis'>
+            {devices[id].token}
+          </span>
         </div>
         <div className='flex flex-row gap-4 w-full'>
-          <label className='w-[15%]' id='lastUpdated'>
-            Last Updated
-          </label>
-          <input
-            className='w-[85%]'
-            name='lastUpdated'
-            value={devices[id].lastUpdated}
-          />
+          <span className='w-[15%]'>Last Updated</span>
+          <span className='w-[85%] overflow-hidden text-ellipsis'>
+            {devices[id].lastUpdated}
+          </span>
         </div>
         {authenticationButtons[id]}
       </div>

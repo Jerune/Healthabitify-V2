@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
+import logo from '../../assets/logo_1b.jpg';
 import { auth } from '../../firebase/firebase';
 import getCategories from '../../firebase/firestore/getCategories';
 import { localSignOut } from '../../redux/reducers/usersReducer';
@@ -15,7 +16,6 @@ import {
 } from '../../redux/reducers/utilsReducer';
 import { useAppDispatch, useAppSelector } from '../../redux/reduxHooks';
 import { Category } from '../../types';
-import logo from '../assets/logo_1b.jpg';
 import Icon from '../icon';
 import LogoText from '../LogoText';
 

@@ -1,12 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import Icon from '../../components/icon';
 import metricsInMilliseconds from '../../data/metrics/metricsInMilliseconds';
 import { updateMetric } from '../../redux/reducers/metricsReducer';
 import { useAppDispatch } from '../../redux/reduxHooks';
 import type { Metric, MetricProps } from '../../types';
-import type { InputEvent, SelectEvent, FormSubmit } from '../../types.js';
+import type { FormSubmit, InputEvent, SelectEvent } from '../../types.js';
 import { capitalizeFirstLetter } from '../../utils/capitalizeFirstLetter';
 
 import SettingsButton from './SettingsButton';
@@ -29,10 +29,10 @@ function MetricCard({ metric }: MetricProps) {
   ) : (
     <Icon iconId='RiStarLine' />
   );
-  const generalSelectStyles = `text-sm select select-bordered font-normal ${
+  const generalSelectStyles = `text-sm w-full select select-bordered font-normal ${
     !editForm && 'opacity-100 bg-gray-100 cursor-not-allowed'
   }`;
-  const generalInputStyles = `text-sm input input-bordered placeholder:italic ${
+  const generalInputStyles = `text-sm w-full input input-bordered placeholder:italic ${
     !editForm && 'opacity-100 bg-gray-100 cursor-not-allowed'
   }`;
 
@@ -137,16 +137,16 @@ function MetricCard({ metric }: MetricProps) {
           )}
         </button>
 
-        <div className='flex flex-col'>
-          <h3>
-            {formData.name}
+        <div className='flex flex-col grow'>
+          <h3 className='text-lg flex flex-row items-center gap-1'>
+            <span className='font-bold'>{formData.name}</span>
             {formData.unit && (
-              <span className='pl-2 text-sm italic in'>({formData.unit})</span>
+              <span className='text-sm italic'>({formData.unit})</span>
             )}
           </h3>
           <span>{capitalizeFirstLetter(formData.source)}</span>
         </div>
-        <div className='flex flex-col justify-between items-end grow'>
+        <div className='flex justify-between items-end gap-2'>
           <input
             type='checkbox'
             className='toggle toggle-success'
@@ -184,9 +184,9 @@ function MetricCard({ metric }: MetricProps) {
       {detailsAreVisible && (
         <>
           <fieldset disabled={!editForm} className='w-full flex flex-col gap-4'>
-            <div className='w-full flex flex-row gap-4'>
-              <div className='w-[50%] flex flex-col'>
-                <SettingsLabel name='dataType'>type</SettingsLabel>
+            <div className='w-full flex flex-row gap-6 justify-between'>
+              <div className='w-full flex flex-col max-w-[50%]'>
+                <SettingsLabel name='dataType'>Type</SettingsLabel>
                 <select
                   name='dataType'
                   className={generalSelectStyles}
@@ -198,8 +198,8 @@ function MetricCard({ metric }: MetricProps) {
                   <option value='duration'>Duration</option>
                 </select>
               </div>
-              <div className='w-[50%] flex flex-col'>
-                <SettingsLabel name='frequency'>frequency</SettingsLabel>
+              <div className='w-full flex flex-col max-w-[50%]'>
+                <SettingsLabel name='frequency'>Frequency</SettingsLabel>
                 <select
                   name='frequency'
                   className={generalSelectStyles}
@@ -213,7 +213,7 @@ function MetricCard({ metric }: MetricProps) {
             </div>
             <div className='flex flex-col'>
               <SettingsLabel name='conditionsMode'>
-                conditions mode
+                Conditions mode
               </SettingsLabel>
               <select
                 name='conditionsMode'
@@ -229,7 +229,7 @@ function MetricCard({ metric }: MetricProps) {
             {formData.conditionsMode === 'range' && (
               <div className='flex flex-col gap-4'>
                 <div className='w-full flex flex-row gap-3 justify-end items-center'>
-                  <i className='rounded-full h-5 w-5 bg-green-600' />
+                  <i className='rounded-full h-5 w-5 min-h-5 min-w-5 bg-green-600' />
                   <select
                     className={`${generalSelectStyles} grow`}
                     name='good'
@@ -253,7 +253,7 @@ function MetricCard({ metric }: MetricProps) {
                   />
                 </div>
                 <div className='w-full flex flex-row gap-3 justify-end items-center'>
-                  <i className='rounded-full h-5 w-5 bg-orange-600' />
+                  <i className='rounded-full h-5 w-5 min-h-5 min-w-5 bg-orange-600' />
                   <span className='flex grow justify-start pl-1'>Between</span>
                   <input
                     className={`${generalInputStyles} w-[30%]`}
@@ -278,7 +278,7 @@ function MetricCard({ metric }: MetricProps) {
                   />
                 </div>
                 <div className='w-full flex flex-row gap-3 justify-end items-center'>
-                  <i className='rounded-full h-5 w-5 bg-red-600' />
+                  <i className='rounded-full h-5 w-5 min-h-5 min-w-5 bg-red-600' />
                   <select
                     className={`grow ${generalSelectStyles}`}
                     name='bad'
@@ -301,14 +301,14 @@ function MetricCard({ metric }: MetricProps) {
                     placeholder={inputValidationData.placeholder}
                   />
                 </div>
-                <div className='text-orange-700 text-sm italic text-right'>
-                  {`Format: ${inputValidationData.typeReference}`}
+                <div className='text-orange-500 text-sm text-left'>
+                  {`Format : ${inputValidationData.typeReference}`}
                 </div>
               </div>
             )}
 
             <div className='w-full flex flex-col'>
-              <SettingsLabel name='goal'>goal</SettingsLabel>
+              <SettingsLabel name='goal'>Goal</SettingsLabel>
               <input
                 className={`${generalInputStyles}`}
                 name='goal'

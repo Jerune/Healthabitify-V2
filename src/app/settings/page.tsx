@@ -49,7 +49,7 @@ function Settings() {
     <>
       <button
         type='button'
-        className='pl-1 mt-6 mb-4 flex flex-row items-center gap-2'
+        className='pl-1 mt-6 mb-4 flex flex-row items-center gap-2 cursor-pointer'
         onClick={() => {
           setActiveCategory(emptyCategory);
           setDetailView('none');
