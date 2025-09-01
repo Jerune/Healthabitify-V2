@@ -6,7 +6,6 @@
 import { useEffect, useState } from 'react';
 
 import Loading from '../../components/Loading';
-import MainContent from '../../components/MainContent';
 import { AveragesData, DashboardComparisonData } from '../../features/_types';
 import DashBoardContainer from '../../features/Dashboard/DashBoardContainer';
 import DashBoardMetricBlock from '../../features/Dashboard/DashBoardMetricBlock';
@@ -129,11 +128,7 @@ function Dashboard() {
     );
   });
 
-  return (
-    <MainContent>
-      <DashBoardContainer>{dashboardBlocks}</DashBoardContainer>
-    </MainContent>
-  );
+  return <DashBoardContainer>{dashboardBlocks}</DashBoardContainer>;
 }
 
 export default Dashboard;

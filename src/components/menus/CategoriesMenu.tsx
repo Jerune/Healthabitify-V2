@@ -1,9 +1,9 @@
-import Icon from '../../components/icon';
 import categoriesList from '../../data/categoriesMock';
 import wearablesCategories from '../../data/wearablesCategories';
-import { SettingsCategoryProps } from '../_types';
+import { SettingsCategoryProps } from '../../features/_types';
+import Icon from '../icon';
 
-function SettingsMenuCategories({
+function CategoriesMenu({
   detailView,
   setMetrics,
   setWearables,
@@ -52,4 +52,4 @@ function SettingsMenuCategories({
   );
 }
 
-export default SettingsMenuCategories;
+export default CategoriesMenu;

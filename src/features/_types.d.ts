@@ -156,10 +156,10 @@ export type ActiveMetricsProps = {
 export type SettingsCategoryProps = {
   detailView: string;
   setMetrics: function;
-  setWearables: function;
+  setWearables?: function;
   activeCategory: ActiveCategory;
-  hideMenuCategories: boolean;
-  setHideMenuCategories: function;
+  hideMenuCategories?: boolean;
+  setHideMenuCategories?: function;
 };
 
 export type Settingsbutton = {

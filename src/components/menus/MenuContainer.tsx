@@ -1,6 +1,6 @@
 import type { PropsWithChildren } from 'react';
 
-function SettingsMenuContainer({ children }: PropsWithChildren) {
+function MenuContainer({ children }: PropsWithChildren) {
   return (
     <div className='flex flex-row justify-start w-screen h-full'>
       {children}
@@ -8,4 +8,4 @@ function SettingsMenuContainer({ children }: PropsWithChildren) {
   );
 }
 
-export default SettingsMenuContainer;
+export default MenuContainer;

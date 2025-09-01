@@ -3,12 +3,12 @@
 import { useState } from 'react';
 import { IoIosArrowBack } from 'react-icons/io';
 
+import SettingsMenuCategories from '../../components/menus/CategoriesMenu';
+import SettingsMenuContainer from '../../components/menus/MenuContainer';
+import SettingsContentField from '../../components/menus/MenuContentField';
 import categoriesList from '../../data/categoriesMock';
 import wearablesCategories from '../../data/wearablesCategories';
 import ActiveMetrics from '../../features/SettingsMenu/ActiveMetrics';
-import SettingsContentField from '../../features/SettingsMenu/SettingsContentField';
-import SettingsMenuCategories from '../../features/SettingsMenu/SettingsMenuCategories';
-import SettingsMenuContainer from '../../features/SettingsMenu/SettingsMenuContainer';
 import SettingsViewSelection from '../../features/SettingsMenu/SettingsViewSelection';
 import WearableCard from '../../features/SettingsMenu/WearableCard';
 
