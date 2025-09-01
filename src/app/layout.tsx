@@ -4,7 +4,7 @@ import { ToastContainer } from 'react-toastify';
 import './globals.css';
 
 import AuthListener from '@/components/AuthListener';
-import HeaderNav from '@/components/HeaderNav';
+import HeaderNav from '@/components/navigation/HeaderNav';
 
 import ManualDataGridContainer from '../features/ManualDataGrid/ManualDataGridContainer';
 

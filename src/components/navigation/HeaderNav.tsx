@@ -6,19 +6,20 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-import logo from '../assets/logo_1b.jpg';
-import { auth } from '../firebase/firebase';
-import getCategories from '../firebase/firestore/getCategories';
-import { localSignOut } from '../redux/reducers/usersReducer';
+import { auth } from '../../firebase/firebase';
+import getCategories from '../../firebase/firestore/getCategories';
+import { localSignOut } from '../../redux/reducers/usersReducer';
 import {
   toggleManualDataGrid,
   toggleMenu,
-} from '../redux/reducers/utilsReducer';
-import { useAppDispatch, useAppSelector } from '../redux/reduxHooks';
-import { Category } from '../types';
+} from '../../redux/reducers/utilsReducer';
+import { useAppDispatch, useAppSelector } from '../../redux/reduxHooks';
+import { Category } from '../../types';
+import logo from '../assets/logo_1b.jpg';
+import Icon from '../icon';
+import LogoText from '../LogoText';
 
-import Icon from './icon';
-import LogoText from './LogoText';
+import NavLink from './NavLink';
 
 function HeaderNav() {
   const router = useRouter();
@@ -46,19 +47,7 @@ function HeaderNav() {
   }, []);
 
   const menuCategories = categories.map(category => {
-    return (
-      <Link
-        href={`/data/${category.name.toLowerCase()}`}
-        key={category.name}
-        className='flex flex-row items-center gap-3 py-2'
-        onClick={() => dispatch(toggleMenu())}
-      >
-        <button type='button' className='text-2xl'>
-          <Icon iconId={category.iconName} />
-        </button>
-        <span className='text-xl'>{category.name}</span>
-      </Link>
-    );
+    return <NavLink key={category.id} category={category} />;
   });
 
   function signOutUser() {
