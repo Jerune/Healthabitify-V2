@@ -51,6 +51,15 @@ export default function matchServiceResourcesWithMetricNames(
       case 'total_sleep_duration':
         dbMetricName = 'amount-of-sleep';
         break;
+      case 'spo2_percentage':
+        dbMetricName = 'blood-oxygen';
+        break;
+      case 'vo2_max':
+        dbMetricName = 'vo2-max';
+        break;
+      case 'vascular_age':
+        dbMetricName = 'cardiovascular-age';
+        break;
       default:
         dbMetricName = 'unknown';
     }

@@ -5,7 +5,13 @@ function getSourceData(source: string) {
   switch (source) {
     case 'oura':
       baseUrl = 'https://api.ouraring.com';
-      resources = ['sleep'];
+      resources = [
+        'sleep',
+        'daily_stress',
+        'daily_cardiovascular_age',
+        'daily_spo2',
+        'vO2_max',
+      ];
       break;
     case 'fitbit':
       baseUrl = 'https://api.fitbit.com/1/user/-/activities';

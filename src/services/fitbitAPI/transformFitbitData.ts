@@ -4,6 +4,8 @@ import matchServiceResourcesWithMetricNames from '../matchResources';
 
 export default function transformFitbitData(fitbitData: FitbitRawData[]) {
   const source = 'fitbit';
+
+  console.log(fitbitData);
   const datapointsToAdd = fitbitData.map(datapointsCollection => {
     const resourceNameFromAPI = Object.keys(datapointsCollection)[0];
     const metric = matchServiceResourcesWithMetricNames(
@@ -34,6 +36,7 @@ export default function transformFitbitData(fitbitData: FitbitRawData[]) {
             year,
           });
         }
+
         if (
           metric === 'heartrate-zones' &&
           typeof datapoint.value !== 'string'

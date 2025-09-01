@@ -168,9 +168,34 @@ export type OuraDailySummary = {
   type: string;
 };
 
+export type OuraVO2maxResponse = {
+  id: string;
+  day: string;
+  timestamp: string;
+  vo2_max: number;
+};
+
+export type OuraCardiovascularAgeResponse = {
+  day: string;
+  vascular_age: number;
+};
+
 export type OuraRawData = {
-  data: OuraDailySummary[];
+  data:
+    | OuraDailySummary[]
+    | OuraVO2maxResponse[]
+    | OuraCardiovascularAgeResponse[]
+    | OuraSpo2Response[];
   next_token: null | string;
+};
+
+export type OuraSpo2Response = {
+  id: string;
+  day: string;
+  spo2_percentage: {
+    average: number;
+  };
+  breathing_disturbance_index: number;
 };
 
 // getApiData
