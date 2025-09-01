@@ -53,10 +53,10 @@ function HeaderNav() {
         className='flex flex-row items-center gap-3 py-2'
         onClick={() => dispatch(toggleMenu())}
       >
-        <button type='button' className='text-xl'>
+        <button type='button' className='text-2xl'>
           <Icon iconId={category.iconName} />
         </button>
-        <span className='text-lg'>{category.name}</span>
+        <span className='text-xl'>{category.name}</span>
       </Link>
     );
   });
@@ -70,7 +70,7 @@ function HeaderNav() {
 
   return (
     <>
-      <header className='flex flex-row fixed top-0 justify-between items-center h-12 w-full bg-palette-600 text-white border-b border-solid border-palette-600 z-20'>
+      <header className='flex flex-row sticky top-0 justify-between items-center h-12 w-full bg-palette-600 text-white border-b border-solid border-palette-600 z-20'>
         <div className='flex flex-row items-center'>
           <Link href='/dashboard'>
             <Image className='h-12 w-16' src={logo} alt='Healthability logo' />
@@ -119,19 +119,18 @@ function HeaderNav() {
           </section>
         )}
       </header>
-      <div className='h-12 w-full' />
       <nav
-        className={`w-screen overflow-scroll md:w-auto h-screen flex flex-col fixed top-12 left-0 pb-14 py-5 pl-6 pr-14 bg-white shadow-lg z-50 ${sideNavClasses}`}
+        className={`w-screen overflow-scroll md:w-auto h-screen flex flex-col fixed top-12 left-0 pb-14 py-5 pl-6 pr-18 bg-white shadow-lg z-50 ${sideNavClasses}`}
       >
         <Link
           href='/'
           className='flex flex-row items-center gap-3 py-2'
           onClick={() => dispatch(toggleMenu())}
         >
-          <button type='button' className='text-xl'>
+          <button type='button' className='text-2xl'>
             <Icon iconId='MdDashboard' />
           </button>
-          <span className='text-lg'>Dashboard</span>
+          <span className='text-xl'>Dashboard</span>
         </Link>
         <div>{menuCategories}</div>
         <div className='mt-6'>

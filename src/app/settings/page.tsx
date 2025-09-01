@@ -1,31 +1,29 @@
 'use client';
 
 import { useState } from 'react';
+import { IoIosArrowBack } from 'react-icons/io';
 
-import MainContent from '../../components/MainContent';
 import categoriesList from '../../data/categoriesMock';
 import wearablesCategories from '../../data/wearablesCategories';
 import ActiveMetrics from '../../features/SettingsMenu/ActiveMetrics';
 import SettingsContentField from '../../features/SettingsMenu/SettingsContentField';
 import SettingsMenuCategories from '../../features/SettingsMenu/SettingsMenuCategories';
 import SettingsMenuContainer from '../../features/SettingsMenu/SettingsMenuContainer';
-import SettingsMenuSection from '../../features/SettingsMenu/SettingsMenuSection';
 import SettingsViewSelection from '../../features/SettingsMenu/SettingsViewSelection';
 import WearableCard from '../../features/SettingsMenu/WearableCard';
-import { useAppSelector } from '../../redux/reduxHooks';
 
 function Settings() {
-  const metrics = useAppSelector(state => state.metrics);
-  const [detailView, setDetailView] = useState('none');
   const emptyCategory = {
     id: '',
     name: '',
     iconName: '',
   };
-  const [activeCategory, setActiveCategory] = useState(emptyCategory);
-  const hasAnActiveCategory = activeCategory.id !== '';
 
+  const [detailView, setDetailView] = useState('none');
+  const [activeCategory, setActiveCategory] = useState(emptyCategory);
   const [hideMenuCategories, setHideMenuCategories] = useState(false);
+
+  const hasAnActiveCategory = activeCategory.id !== '';
 
   async function setMetrics(categoryId: string) {
     const activeCat = categoriesList.filter(
@@ -43,51 +41,44 @@ function Settings() {
     setDetailView('wearables');
   }
 
+  if (detailView === 'none') {
+    return <SettingsViewSelection setDetailView={setDetailView} />;
+  }
+
   return (
-    <MainContent>
-      {detailView === 'none' && (
-        <SettingsViewSelection setDetailView={setDetailView} />
-      )}
-      {detailView !== 'none' && (
-        <>
-          <button
-            type='button'
-            className='absolute top-16 left-6'
-            onClick={() => {
-              setActiveCategory(emptyCategory);
-              setDetailView('none');
-              setHideMenuCategories(false);
-            }}
-          >
-            &larr; Back
-          </button>
-          <SettingsMenuContainer>
-            <SettingsMenuSection>
-              <SettingsMenuCategories
-                detailView={detailView}
-                setMetrics={setMetrics}
-                setWearables={setWearables}
-                activeCategory={activeCategory}
-                hideMenuCategories={hideMenuCategories}
-                setHideMenuCategories={setHideMenuCategories}
-              />
-            </SettingsMenuSection>
-            {hasAnActiveCategory && (
-              <SettingsContentField>
-                {detailView === 'metrics' ? (
-                  <ActiveMetrics
-                    metrics={metrics}
-                    activeCategory={activeCategory}
-                  />
-                ) : (
-                  <WearableCard activeCategory={activeCategory} />
-                )}
-              </SettingsContentField>
+    <>
+      <button
+        type='button'
+        className='pl-1 mt-6 mb-4 flex flex-row items-center gap-2'
+        onClick={() => {
+          setActiveCategory(emptyCategory);
+          setDetailView('none');
+          setHideMenuCategories(false);
+        }}
+      >
+        <IoIosArrowBack />
+        <p className='flex flex-row items-center'>Back</p>
+      </button>
+      <SettingsMenuContainer>
+        <SettingsMenuCategories
+          detailView={detailView}
+          setMetrics={setMetrics}
+          setWearables={setWearables}
+          activeCategory={activeCategory}
+          hideMenuCategories={hideMenuCategories}
+          setHideMenuCategories={setHideMenuCategories}
+        />
+        {hasAnActiveCategory && (
+          <SettingsContentField>
+            {detailView === 'metrics' ? (
+              <ActiveMetrics activeCategory={activeCategory} />
+            ) : (
+              <WearableCard activeCategory={activeCategory} />
             )}
-          </SettingsMenuContainer>
-        </>
-      )}
-    </MainContent>
+          </SettingsContentField>
+        )}
+      </SettingsMenuContainer>
+    </>
   );
 }
 

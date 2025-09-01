@@ -150,7 +150,6 @@ export type ActiveCategory = {
 };
 
 export type ActiveMetricsProps = {
-  metrics: Metric[];
   activeCategory: ActiveCategory;
 };
 

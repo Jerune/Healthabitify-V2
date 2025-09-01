@@ -1,7 +1,9 @@
 import AppStateInit from '@/components/InitializeApp';
 import TimeSelectionModule from '@/features/TimesDatesModule/TimeSelectionModule';
-import 'react-date-picker/dist/DatePicker.css';
+
 import 'react-calendar/dist/Calendar.css';
+import 'react-date-picker/dist/DatePicker.css';
+import MainContent from '../../components/MainContent';
 export default function DashboardLayout({
   children,
 }: Readonly<{
@@ -10,8 +12,10 @@ export default function DashboardLayout({
   return (
     <>
       <AppStateInit />
-      <TimeSelectionModule />
-      {children}
+      <MainContent>
+        <TimeSelectionModule />
+        {children}
+      </MainContent>
     </>
   );
 }

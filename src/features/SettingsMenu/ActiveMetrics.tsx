@@ -1,8 +1,11 @@
+import { useAppSelector } from '../../redux/reduxHooks';
 import { ActiveMetricsProps } from '../_types';
 
 import MetricCard from './MetricCard';
 
-function ActiveMetrics({ metrics, activeCategory }: ActiveMetricsProps) {
+function ActiveMetrics({ activeCategory }: ActiveMetricsProps) {
+  const metrics = useAppSelector(state => state.metrics);
+
   const filteredMetrics = metrics.filter(
     metric => metric.categoryId === activeCategory.id
   );
