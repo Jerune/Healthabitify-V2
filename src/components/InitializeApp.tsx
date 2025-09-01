@@ -75,45 +75,18 @@ function AppStateInit() {
 
   async function initializeServiceAPIs() {
     const yesterdayString = getYesterdaysDateAsString();
-    // Checks if there is any new dates with possible new data
+    // </-------------------------- FITBIT DATA UPDATE -----------------------------/>
     if (devices.fitbit.lastUpdated <= yesterdayString) {
-      // Refresh token before loading new data
-      try {
-        const response = await fetch('/api/refresh-token', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
-          body: JSON.stringify({ platform: 'fitbit' }),
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          console.error('Fitbit token refresh failed:', errorData);
-
-          // Check if we need to re-authorize
-          if (errorData.action === 'reauthorize') {
-            console.log('Redirecting to Fitbit re-authorization...');
-            window.location.href = errorData.authUrl;
-            return;
-          }
-          console.log('Fitbit token refresh failed, skipping data load');
-          return;
-        }
-
-        console.log('Fitbit token refreshed successfully');
-      } catch (error) {
-        console.error('Failed to refresh Fitbit token:', error);
-        return;
-      }
-
+      // Set loading message
       dispatch(changeLoadingMessage('Gathering Fitbit Data'));
       // Gets data for those dates from Fitbit API
       const fitbitDataFromAPI = (await getApiData(
         'fitbit',
-        devices.fitbit.token,
         devices.fitbit.lastUpdated
       )) as FitbitRawData[];
+
       if (typeof fitbitDataFromAPI !== 'string') {
+        // Set loading message
         dispatch(changeLoadingMessage('Transforming Fitbit data'));
         // Transforms Fitbit data to a readable format if new data is returned
         const newFitbitDatapoints =
@@ -143,45 +116,21 @@ function AppStateInit() {
         );
       }
     }
+
+    // </-------------------------- OURA DATA UPDATE -----------------------------/>
     if (devices.oura.lastUpdated <= yesterdayString) {
-      // Refresh token before loading new data
-      try {
-        const response = await fetch('/api/refresh-token', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
-          body: JSON.stringify({ platform: 'oura' }),
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          console.error('Oura token refresh failed:', errorData);
-
-          // Check if we need to re-authorize
-          if (errorData.action === 'reauthorize') {
-            console.log('Redirecting to Oura re-authorization...');
-            window.location.href = errorData.authUrl;
-            return;
-          }
-          console.log('Oura token refresh failed, skipping data load');
-          return;
-        }
-
-        console.log('Oura token refreshed successfully');
-      } catch (error) {
-        console.error('Failed to refresh Oura token:', error);
-        return;
-      }
-
+      // Set loading message
       dispatch(changeLoadingMessage('Gathering Oura Data'));
 
       const ouraDataFromAPI = (await getApiData(
         'oura',
-        devices.oura.token,
         devices.oura.lastUpdated
       )) as OuraRawData[];
 
-      if (typeof ouraDataFromAPI !== 'string') {
+      if (
+        typeof ouraDataFromAPI !== 'string' ||
+        typeof ouraDataFromAPI[0] !== 'string'
+      ) {
         dispatch(changeLoadingMessage('Transforming Oura data'));
 
         let newOuraDatapoints: DataPoint[] = [];
@@ -204,16 +153,13 @@ function AppStateInit() {
         } else {
           console.log('No new Oura datapoints to add');
         }
-      } else if (ouraDataFromAPI[0] === 'error') {
+      } else if (
+        ouraDataFromAPI[0] === 'error' ||
+        ouraDataFromAPI === 'error'
+      ) {
         console.error('Oura API returned error:', ouraDataFromAPI);
         toast.error(
           'An error occured while getting the Oura Data, please try again later'
-        );
-      } else {
-        console.log(
-          'Oura API response type:',
-          typeof ouraDataFromAPI[0],
-          ouraDataFromAPI[0]
         );
       }
     }

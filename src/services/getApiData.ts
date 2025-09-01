@@ -11,19 +11,54 @@ import getSourceData from './getSourceData';
 
 export default async function getApiData(
   source: string,
-  token: string,
   lastUpdated: string
 ): Promise<OuraRawData[] | FitbitRawData[] | string> {
   if (source !== 'oura' && source !== 'fitbit') {
     return 'error';
   }
 
-  // Dates
+  // Always refresh token first and use the fresh access token for downstream calls
+  let token = '';
+  try {
+    const response = await fetch('/api/refresh-token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ platform: source }),
+    });
+
+    if (!response.ok) {
+      try {
+        const errorData = await response.json();
+        if (errorData?.action === 'reauthorize' && errorData?.authUrl) {
+          // Redirect to re-authorization if the server indicates this is required
+          if (typeof window !== 'undefined') {
+            window.location.href = errorData.authUrl;
+          }
+          return 'error';
+        }
+      } catch (error: unknown) {
+        console.error('Failed to refresh token:', error);
+        return 'error';
+      }
+    }
+
+    const tokens = await response.json();
+    token = tokens.access_token;
+    if (!token) {
+      return 'error';
+    }
+  } catch (error: unknown) {
+    console.error('Failed to refresh token:', error);
+    return 'error';
+  }
+
+  // DATES
   // dayBeforeLastUpdated to be used for Oura API as starts with day after start_date value
   let endDateAsString = getYesterdaysDateAsString();
   const dayBeforeLastUpdated = getDayBeforeAsString(lastUpdated);
 
-  // FITBIT: Check when fitbit app is updated last
+  // FITBIT ONLY: Check when fitbit app is updated last
   // return error when last sync is same as last updated (no update needed)
   if (source === 'fitbit') {
     const fitbitLastSynchedDate = await getLastSyncTime(token);
