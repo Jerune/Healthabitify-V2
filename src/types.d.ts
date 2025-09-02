@@ -130,6 +130,16 @@ export type ReadinessContributors = {
   temperature_trend_deviation: number;
 };
 
+export type OuraRawData = {
+  data:
+    | OuraDailySummary[]
+    | OuraVO2maxResponse[]
+    | OuraCardiovascularAgeResponse[]
+    | OuraSpo2Response[]
+    | OuraStressResponse[];
+  next_token: null | string;
+};
+
 export type OuraDailySummary = {
   id: string;
   average_breath: number;
@@ -180,15 +190,6 @@ export type OuraCardiovascularAgeResponse = {
   vascular_age: number;
 };
 
-export type OuraRawData = {
-  data:
-    | OuraDailySummary[]
-    | OuraVO2maxResponse[]
-    | OuraCardiovascularAgeResponse[]
-    | OuraSpo2Response[];
-  next_token: null | string;
-};
-
 export type OuraSpo2Response = {
   id: string;
   day: string;
@@ -196,6 +197,14 @@ export type OuraSpo2Response = {
     average: number;
   };
   breathing_disturbance_index: number;
+};
+
+export type OuraStressResponse = {
+  id: string;
+  day: string;
+  stress_high: number;
+  recovery_high: number;
+  day_summary: string;
 };
 
 // getApiData

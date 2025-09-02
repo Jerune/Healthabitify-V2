@@ -4,6 +4,7 @@ import {
   OuraDailySummary,
   OuraRawData,
   OuraSpo2Response,
+  OuraStressResponse,
   OuraVO2maxResponse,
 } from '../../types';
 import { getDateTimeDataForDatapoints } from '../../utils/getDateTimeData';
@@ -121,6 +122,51 @@ export default async function transformOuraData(
           date,
           source,
           metric,
+          weekNumber,
+          month,
+          year,
+        };
+        datapointsToAdd.push(newDatapoint);
+      }
+    }
+
+    // Handle OuraStressResponse
+    else if ('stress_high' in resource) {
+      const stressData = resource as OuraStressResponse;
+      const date = stressData.day;
+      const { month, weekNumber, year } = getDateTimeDataForDatapoints(date);
+
+      // Handle stress_high metric
+      const stressMetric = matchServiceResourcesWithMetricNames(
+        source,
+        'stress_high'
+      );
+      if (stressMetric !== 'unknown') {
+        const newDatapoint: DataPoint = {
+          userId: 'nbkxUOC66VVE7CbqhloaTQJKiRH3',
+          value: stressData.stress_high,
+          date,
+          source,
+          metric: stressMetric,
+          weekNumber,
+          month,
+          year,
+        };
+        datapointsToAdd.push(newDatapoint);
+      }
+
+      // Handle recovery_high metric
+      const recoveryMetric = matchServiceResourcesWithMetricNames(
+        source,
+        'recovery_high'
+      );
+      if (recoveryMetric !== 'unknown') {
+        const newDatapoint: DataPoint = {
+          userId: 'nbkxUOC66VVE7CbqhloaTQJKiRH3',
+          value: stressData.recovery_high,
+          date,
+          source,
+          metric: recoveryMetric,
           weekNumber,
           month,
           year,

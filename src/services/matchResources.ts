@@ -60,6 +60,12 @@ export default function matchServiceResourcesWithMetricNames(
       case 'vascular_age':
         dbMetricName = 'cardiovascular-age';
         break;
+      case 'stress_high':
+        dbMetricName = 'stress-minutes';
+        break;
+      case 'recovery_high':
+        dbMetricName = 'recovery-minutes';
+        break;
       default:
         dbMetricName = 'unknown';
     }
