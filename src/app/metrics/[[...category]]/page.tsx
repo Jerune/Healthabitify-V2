@@ -3,62 +3,53 @@
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-import SettingsMenuCategories from '../../../components/menus/CategoriesMenu';
-import SettingsMenuContainer from '../../../components/menus/MenuContainer';
-import SettingsContentField from '../../../components/menus/MenuContentField';
-import categoriesList from '../../../data/categoriesMock';
+import MainContent from '../../../components/MainContent';
 import getActiveMetrics from '../../../features/DataGrid/getActiveMetrics';
+import MetricGraph from '../../../features/Metrics/MetricGraph';
+import MetricsMenu from '../../../features/Metrics/MetricsMenu';
 import { useAppSelector } from '../../../redux/reduxHooks';
+import { Metric } from '../../../types';
 
 function MetricsPage() {
   const { category } = useParams();
-  const title = category ? category[0] : '';
+  const activeCategory = category ? category[0] : null;
   const allMetrics = useAppSelector(state => state.metrics);
-  // const allAverages = useAppSelector(state => state.averages);
-  // const activeTimeView = useAppSelector(state => state.utils.activeTimeView);
 
-  const emptyCategory = {
-    id: '',
-    name: '',
-    iconName: '',
-  };
+  const [activeMetrics, setActiveMetrics] = useState<Metric[]>([]);
+  const [selectedMetric, setSelectedMetric] = useState<Metric | null>(null);
+  const hasAnActiveMetric = selectedMetric;
 
-  const [activeCategory, setActiveCategory] = useState(emptyCategory);
-  const hasAnActiveCategory = activeCategory.id !== '';
-
-  console.log(title, allMetrics);
+  console.log(activeCategory, allMetrics);
 
   useEffect(() => {
-    if (title !== '') {
-      const activeMetrics = getActiveMetrics(allMetrics, title);
-      setMetrics(activeMetrics[0].categoryId);
+    if (activeCategory) {
+      const metrics = getActiveMetrics(allMetrics, activeCategory);
+      setActiveMetrics(metrics);
+      setSelectedMetric(metrics[0]);
     }
-  }, [allMetrics, title]);
+  }, [allMetrics, activeCategory]);
 
-  async function setMetrics(categoryId: string) {
-    const activeCat = categoriesList.filter(
-      category => category.id === categoryId
+  async function setMetrics(metricData: Metric) {
+    const activeCat = activeMetrics.filter(
+      metric => metric.id === metricData.id
     )[0];
-    setActiveCategory(activeCat);
+    setSelectedMetric(activeCat);
   }
 
   return (
     <>
-      <h1 className='block text-xl md:text-4xl'>
-        {title.charAt(0).toUpperCase() + title.slice(1)}
-      </h1>
-      <SettingsMenuContainer>
-        <SettingsMenuCategories
-          detailView='metrics'
-          setMetrics={setMetrics}
-          activeCategory={activeCategory}
-        />
-        {hasAnActiveCategory && (
-          <SettingsContentField>
-            {/* // Add data grid here */}
-          </SettingsContentField>
+      <MetricsMenu
+        metrics={activeMetrics}
+        setMetric={setMetrics}
+        activeMetric={selectedMetric as Metric}
+      />
+      <MainContent>
+        {hasAnActiveMetric && (
+          <section className='w-full flex'>
+            <MetricGraph metric={selectedMetric} />
+          </section>
         )}
-      </SettingsMenuContainer>
+      </MainContent>
     </>
   );
 }

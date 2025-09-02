@@ -1,7 +1,7 @@
-import categoriesList from '../../data/categoriesMock';
-import wearablesCategories from '../../data/wearablesCategories';
-import { SettingsCategoryProps } from '../../features/_types';
-import Icon from '../icon';
+import Icon from '../../../components/icon';
+import categoriesList from '../../../data/categoriesMock';
+import wearablesCategories from '../../../data/wearablesCategories';
+import { SettingsCategoryProps } from '../../_types';
 
 function CategoriesMenu({
   detailView,

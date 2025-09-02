@@ -3,12 +3,12 @@
 import { useState } from 'react';
 import { IoIosArrowBack } from 'react-icons/io';
 
-import SettingsMenuCategories from '../../components/menus/CategoriesMenu';
-import SettingsMenuContainer from '../../components/menus/MenuContainer';
-import SettingsContentField from '../../components/menus/MenuContentField';
 import categoriesList from '../../data/categoriesMock';
 import wearablesCategories from '../../data/wearablesCategories';
 import ActiveMetrics from '../../features/SettingsMenu/ActiveMetrics';
+import CategoriesMenu from '../../features/SettingsMenu/menus/CategoriesMenu';
+import MenuContainer from '../../features/SettingsMenu/menus/MenuContainer';
+import MenuContentField from '../../features/SettingsMenu/menus/MenuContentField';
 import SettingsViewSelection from '../../features/SettingsMenu/SettingsViewSelection';
 import WearableCard from '../../features/SettingsMenu/WearableCard';
 
@@ -59,8 +59,8 @@ function Settings() {
         <IoIosArrowBack />
         <p className='flex flex-row items-center'>Back</p>
       </button>
-      <SettingsMenuContainer>
-        <SettingsMenuCategories
+      <MenuContainer>
+        <CategoriesMenu
           detailView={detailView}
           setMetrics={setMetrics}
           setWearables={setWearables}
@@ -69,15 +69,15 @@ function Settings() {
           setHideMenuCategories={setHideMenuCategories}
         />
         {hasAnActiveCategory && (
-          <SettingsContentField>
+          <MenuContentField>
             {detailView === 'metrics' ? (
               <ActiveMetrics activeCategory={activeCategory} />
             ) : (
               <WearableCard activeCategory={activeCategory} />
             )}
-          </SettingsContentField>
+          </MenuContentField>
         )}
-      </SettingsMenuContainer>
+      </MenuContainer>
     </>
   );
 }

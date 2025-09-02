@@ -80,6 +80,14 @@ export type DashboardDataProps = {
   data: MetricDashboardData;
 };
 
+// Metrics Page
+
+export type MetricsMenuProps = {
+  metrics: Metric[];
+  setMetric: (metricId: Metric) => Promise<void>;
+  activeMetric: Metric;
+};
+
 // Data Grid - AG Grid compatible types
 export type DataPoint = {
   date?: string;
