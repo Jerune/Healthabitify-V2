@@ -1,4 +1,5 @@
 import { ResponsiveLine } from '@nivo/line';
+import { DateTime } from 'luxon';
 
 import { useAppSelector } from '../../redux/reduxHooks';
 import { Metric } from '../../types';
@@ -67,7 +68,7 @@ function MetricGraph({ metric }: { metric: Metric }) {
       <div className='h-full'>
         <ResponsiveLine
           data={[chartData]}
-          margin={{ top: 20, right: 20, bottom: 60, left: 60 }}
+          margin={{ top: 20, right: 20, bottom: 60, left: 80 }}
           xScale={{ type: 'point' }}
           yScale={{
             type: 'linear',
@@ -77,7 +78,6 @@ function MetricGraph({ metric }: { metric: Metric }) {
             reverse: false,
             nice: true,
           }}
-          yFormat=' >-.2f'
           curve='monotoneX'
           axisTop={null}
           axisRight={null}
@@ -85,19 +85,65 @@ function MetricGraph({ metric }: { metric: Metric }) {
             tickSize: 5,
             tickPadding: 5,
             tickRotation: -45,
-            legend: 'Period',
-            legendOffset: 50,
-            legendPosition: 'middle',
+            format: value => {
+              if (activeTimeView === 'week') {
+                const match = String(value).match(/\(([^)]+)\)/);
+                if (match && match[1]) {
+                  return match[1].split(' - ')[0];
+                }
+              }
+              if (activeTimeView === 'month') {
+                const dt = DateTime.fromFormat(String(value), 'MMMM yyyy');
+                if (dt.isValid) {
+                  return dt.toFormat('LLL yyyy');
+                }
+              }
+              return String(value);
+            },
           }}
           axisLeft={{
             tickSize: 5,
             tickPadding: 5,
             tickRotation: 0,
-            legend: metric.unit,
-            legendOffset: -50,
-            legendPosition: 'middle',
+            format: value => {
+              const num = Number(value);
+              const unitLower = (metric.unit || '').toLowerCase();
+              const isTimeLike =
+                metric.dataType === 'time' ||
+                metric.dataType === 'duration' ||
+                unitLower === 'h' ||
+                unitLower === 'hr' ||
+                unitLower === 'hrs' ||
+                unitLower === 'hour' ||
+                unitLower === 'hours';
+              if (isTimeLike) {
+                const isNegative = num < 0;
+                const abs = Math.abs(num);
+                const hours = Math.floor(abs);
+                let minutes = Math.round((abs - hours) * 60);
+                let adjHours = hours;
+                if (minutes === 60) {
+                  adjHours += 1;
+                  minutes = 0;
+                }
+                const hh = `${isNegative ? '-' : ''}${adjHours}`;
+                const mm = String(minutes).padStart(2, '0');
+                return `${hh}:${mm}h`;
+              }
+              if (metric.unit) {
+                const decimals =
+                  metric.decimals !== undefined
+                    ? metric.decimals
+                    : Number.isInteger(num)
+                      ? 0
+                      : 2;
+                const formatted = num.toFixed(decimals);
+                return `${formatted} ${metric.unit}`;
+              }
+              return String(num);
+            },
           }}
-          pointSize={8}
+          pointSize={12}
           pointColor='#3B82F6'
           pointBorderWidth={2}
           pointBorderColor='#ffffff'
