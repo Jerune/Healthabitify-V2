@@ -119,9 +119,11 @@ function Login() {
     }
   }
 
-  if (isLoggedIn) {
-    router.push('/dashboard');
-  }
+  useEffect(() => {
+    if (isLoggedIn) {
+      router.push('/dashboard');
+    }
+  }, [isLoggedIn, router]);
 
   return (
     <div className='h-screen w-screen overflow-hidden'>
