@@ -1,4 +1,6 @@
-const categoriesList = [
+import { CategoryData } from '../components/_types';
+
+const categoriesList: CategoryData[] = [
   {
     id: 'vitals',
     name: 'Vitals',

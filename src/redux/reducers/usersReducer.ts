@@ -18,6 +18,11 @@ const activeUser = {
       lastUpdated: '',
       refreshToken: '',
     },
+    polar: {
+      token: '',
+      lastUpdated: '',
+      refreshToken: '',
+    },
   },
 };
 
@@ -40,7 +45,7 @@ export const userSlice = createSlice({
       return { ...activeUser };
     },
     setDevices: (state, action) => {
-      const { oura, fitbit } = action.payload;
+      const { oura, fitbit, polar } = action.payload;
       return {
         ...state,
         devices: {
@@ -54,6 +59,11 @@ export const userSlice = createSlice({
             lastUpdated: fitbit.lastUpdated,
             refreshToken: fitbit.refreshToken,
           },
+          polar: {
+            token: polar.token,
+            lastUpdated: polar.lastUpdated,
+            refreshToken: polar.refreshToken,
+          },
         },
       };
     },
@@ -63,6 +73,8 @@ export const userSlice = createSlice({
         state.devices.oura.token = token;
       } else if (name === 'fitbit') {
         state.devices.fitbit.token = token;
+      } else if (name === 'polar') {
+        state.devices.polar.token = token;
       }
     },
     default: state => {

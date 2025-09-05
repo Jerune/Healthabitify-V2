@@ -2,7 +2,7 @@ import { useAppSelector } from '../../redux/reduxHooks';
 import { Device } from '../../types';
 import { AuthenticationButton, WearableCardProps } from '../_types';
 
-import { FitbitButton, OuraButton } from './Wearables';
+import { FitbitButton, OuraButton, PolarButton } from './Wearables';
 
 function WearableCard({ activeCategory }: WearableCardProps) {
   const devices: Device = useAppSelector(state => state.user.devices);
@@ -11,6 +11,7 @@ function WearableCard({ activeCategory }: WearableCardProps) {
   const authenticationButtons: AuthenticationButton = {
     oura: <OuraButton />,
     fitbit: <FitbitButton />,
+    polar: <PolarButton />,
   };
 
   if (id === '') {

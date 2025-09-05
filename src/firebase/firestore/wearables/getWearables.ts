@@ -22,6 +22,7 @@ async function getWearables(): Promise<WearablesData | Error> {
     return {
       fitbit: wearablesList[0],
       oura: wearablesList[1],
+      polar: wearablesList[2],
     };
   } catch (error) {
     return error instanceof Error ? error : new Error('Unknown error');

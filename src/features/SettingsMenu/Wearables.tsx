@@ -1,11 +1,12 @@
 import AuthorizeWearableButton from '../../services/AuthorizeWearableButton';
+import { OAUTH_SCOPES } from '../../services/oauthConfig';
 
 function OuraButton() {
   return (
     <AuthorizeWearableButton
       url='https://cloud.ouraring.com/oauth/authorize'
       id='OBGZFELJOIDPH67I'
-      scope='daily heartrate workout session'
+      scope={OAUTH_SCOPES.oura}
       name='oura'
     />
   );
@@ -16,10 +17,21 @@ function FitbitButton() {
     <AuthorizeWearableButton
       url='https://www.fitbit.com/oauth2/authorize'
       id='238Z6R'
-      scope='activity cardio_fitness heartrate electrocardiogram oxygen_saturation respiratory_rate sleep temperature weight settings'
+      scope={OAUTH_SCOPES.fitbit}
       name='fitbit'
     />
   );
 }
 
-export { OuraButton, FitbitButton };
+function PolarButton() {
+  return (
+    <AuthorizeWearableButton
+      url='https://flow.polar.com/oauth2/authorization'
+      id='238Z6R'
+      scope={OAUTH_SCOPES.polar}
+      name='polar'
+    />
+  );
+}
+
+export { FitbitButton, OuraButton, PolarButton };

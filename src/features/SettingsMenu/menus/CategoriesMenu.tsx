@@ -18,7 +18,7 @@ function CategoriesMenu({
   const categories = dataSource.map(category => {
     return (
       <button
-        className={`w-full flex flex-row gap-2 justify-start items-center text-xl p-8 rounded-lg shadow-lg  hover:bg-palette-600 hover:text-2xl hover:italic hover:text-white hover:transition-colors hover:underline cursor-pointer ${
+        className={`w-full flex flex-row gap-2 justify-start items-center text-xl p-8 rounded-lg shadow-lg  hover:bg-palette-600 hover:text-2xl hover:text-white hover:transition-colors hover:underline cursor-pointer ${
           activeCategory.id === category.id
             ? 'bg-palette-600 italic text-white'
             : 'bg-white'
@@ -35,8 +35,12 @@ function CategoriesMenu({
           }
         }}
       >
-        <i>
-          <Icon iconId={category.iconName} />
+        <i className='h-8 w-8 flex items-center justify-center'>
+          {detailView === 'wearables' ? (
+            <category.iconName />
+          ) : (
+            <Icon iconId={category.iconName} />
+          )}
         </i>
         <h2 className='text-2xl font-normal'>{category.name}</h2>
       </button>

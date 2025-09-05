@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { IoIosArrowBack } from 'react-icons/io';
 
+import { CategoryData, WearablesData } from '../../components/_types';
 import categoriesList from '../../data/categoriesMock';
 import wearablesCategories from '../../data/wearablesCategories';
 import ActiveMetrics from '../../features/SettingsMenu/ActiveMetrics';
@@ -13,14 +14,16 @@ import SettingsViewSelection from '../../features/SettingsMenu/SettingsViewSelec
 import WearableCard from '../../features/SettingsMenu/WearableCard';
 
 function Settings() {
-  const emptyCategory = {
+  const emptyCategory: CategoryData = {
     id: '',
     name: '',
     iconName: '',
   };
 
   const [detailView, setDetailView] = useState('none');
-  const [activeCategory, setActiveCategory] = useState(emptyCategory);
+  const [activeCategory, setActiveCategory] = useState<
+    CategoryData | WearablesData
+  >(emptyCategory);
   const [hideMenuCategories, setHideMenuCategories] = useState(false);
 
   const hasAnActiveCategory = activeCategory.id !== '';

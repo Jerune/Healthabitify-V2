@@ -1,6 +1,7 @@
 import { DateTime } from 'luxon';
 import type { PropsWithChildren, ReactNode } from 'react';
 
+import { WearablesData } from '../components/_types';
 import { Metric } from '../types';
 
 // AveragesManagement
@@ -151,11 +152,7 @@ export type DatapointToEdit = {
 
 // SettingsMenu
 
-export type ActiveCategory = {
-  id: string;
-  name: string;
-  iconName: string;
-};
+export type ActiveCategory = WearablesData | CategoryData;
 
 export type ActiveMetricsProps = {
   activeCategory: ActiveCategory;

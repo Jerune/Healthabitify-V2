@@ -34,6 +34,7 @@ export type Wearable = {
 export type WearablesData = {
   fitbit: Wearable;
   oura: Wearable;
+  polar: Wearable;
 };
 
 export type Metric = {

@@ -7,18 +7,10 @@ function AuthorizeWearableButton({ scope, name }: AuthorizeApi) {
 
   const handleAuth = () => {
     try {
-      // Oura OAuth flow
-      if (name.toLowerCase() === 'oura') {
-        const qs = new URLSearchParams({ scope }).toString();
-        window.open(`/api/oura/auth?${qs}`, '_blank');
-        return;
-      }
-
-      // Fitbit OAuth flow
-      const qs = new URLSearchParams({
-        scope: 'activity heartrate nutrition sleep weight',
-      }).toString();
-      window.open(`/api/fitbit/auth?${qs}`, '_blank');
+      const path = `/api/${name}/auth`;
+      const params = new URLSearchParams({ scope }).toString();
+      const url = params ? `${path}?${params}` : path;
+      window.open(url, '_blank');
     } catch (e) {
       console.error('Authorization error:', e);
     }

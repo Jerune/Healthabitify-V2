@@ -1,13 +1,21 @@
-const wearablesCategories = [
+import { FitbitLogo, OuraLogo, PolarLogo } from '../assets/Logos';
+import { WearablesData } from '../components/_types';
+
+const wearablesCategories: WearablesData[] = [
   {
     id: 'oura',
     name: 'Oura',
-    iconName: 'FaRing',
+    iconName: OuraLogo,
   },
   {
     id: 'fitbit',
     name: 'Fitbit',
-    iconName: 'SiFitbit',
+    iconName: FitbitLogo,
+  },
+  {
+    id: 'polar',
+    name: 'Polar',
+    iconName: PolarLogo,
   },
 ];
 
