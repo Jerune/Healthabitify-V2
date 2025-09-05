@@ -6,6 +6,7 @@ import { Metric } from '../../types';
 import type { MonthlyRowData, WeeklyRowData, YearlyRowData } from '../_types';
 import buildRows from '../DataGrid/buildRows';
 
+import AnimatedPoints from './AnimatedPoints';
 import {
   getMonthlyChartData,
   getWeeklyChartData,
@@ -61,13 +62,22 @@ function MetricGraph({ metric }: { metric: Metric }) {
   }
 
   return (
-    <div
-      className='w-full bg-white border border-gray-300'
-      style={{ height: 'calc(100vh - 350px)' }}
-    >
+    <div className='w-full bg-white border border-gray-300 h-[calc(100vh-250px)]'>
       <div className='h-full'>
         <ResponsiveLine
           data={[chartData]}
+          layers={[
+            'grid',
+            'markers',
+            'axes',
+            'areas',
+            'crosshair',
+            'lines',
+            AnimatedPoints,
+            'slices',
+            'mesh',
+            'legends',
+          ]}
           margin={{ top: 20, right: 20, bottom: 60, left: 80 }}
           xScale={{ type: 'point' }}
           yScale={{
@@ -143,7 +153,7 @@ function MetricGraph({ metric }: { metric: Metric }) {
               return String(num);
             },
           }}
-          pointSize={12}
+          pointSize={10}
           pointColor='#3B82F6'
           pointBorderWidth={2}
           pointBorderColor='#ffffff'

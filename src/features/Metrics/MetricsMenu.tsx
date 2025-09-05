@@ -15,7 +15,9 @@ function MetricsMenu({ metrics, setMetric, activeMetric }: MetricsMenuProps) {
           setMetric(metric);
         }}
       >
-        <h2 className='text-lg font-normal'>{metric.name}</h2>
+        <h2 className='text-lg font-normal text-ellipsis overflow-hidden whitespace-nowrap'>
+          {metric.name}
+        </h2>
       </button>
     );
   });
