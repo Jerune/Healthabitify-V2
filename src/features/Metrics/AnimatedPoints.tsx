@@ -1,18 +1,51 @@
 import type { LineCustomSvgLayerProps, LineSeries } from '@nivo/line';
+import type { Metric } from '../../types';
+import {
+  DOT_COLORS,
+  classifyByDelta,
+  classifyByRange,
+  toNumeric,
+} from './conditionalFormatting';
 
 export default function AnimatedPoints<Series extends LineSeries>({
   points,
   currentPoint,
   pointSize,
   pointBorderWidth,
-}: LineCustomSvgLayerProps<Series>) {
+  metric,
+}: LineCustomSvgLayerProps<Series> & { metric?: Metric }) {
+  // Access metric if provided via ResponsiveLine layer closure; fall back to coloring by series color
   return (
     <g>
-      {points.map(point => {
+      {points.map((point, idx, arr) => {
         const isActive = currentPoint && currentPoint.id === point.id;
         const scale = isActive ? 1.25 : 1;
-        const fill = isActive ? '#ffffff' : point.color;
-        const stroke = point.color;
+
+        // Determine classification color
+        // Try range first when conditionsMode === 'range'; else delta vs previous point
+        let dotColor = point.color;
+        const seriesMetric: Metric | undefined = metric;
+        const yVal = toNumeric((point.data as any).y ?? point.data.yFormatted);
+        const prev =
+          idx > 0
+            ? toNumeric(
+                (arr[idx - 1].data as any).y ?? arr[idx - 1].data.yFormatted
+              )
+            : null;
+        if (seriesMetric?.conditionsMode === 'range') {
+          const cls = classifyByRange(seriesMetric, yVal);
+          dotColor = DOT_COLORS[cls];
+        } else if (
+          seriesMetric &&
+          (seriesMetric.conditionsMode === 'higher' ||
+            seriesMetric.conditionsMode === 'lower')
+        ) {
+          const cls = classifyByDelta(seriesMetric, yVal, prev);
+          dotColor = DOT_COLORS[cls];
+        }
+
+        const fill = isActive ? '#ffffff' : dotColor;
+        const stroke = dotColor;
         const borderW =
           (typeof pointBorderWidth === 'number' ? pointBorderWidth : 0) +
           (isActive ? 1 : 0);

@@ -7,6 +7,7 @@ import type { MonthlyRowData, WeeklyRowData, YearlyRowData } from '../_types';
 import buildRows from '../DataGrid/buildRows';
 
 import AnimatedPoints from './AnimatedPoints';
+import { computeRangeSegments } from './conditionalFormatting';
 import {
   getMonthlyChartData,
   getWeeklyChartData,
@@ -67,13 +68,37 @@ function MetricGraph({ metric }: { metric: Metric }) {
         <ResponsiveLine
           data={[chartData]}
           layers={[
+            ({ innerWidth, innerHeight, yScale }) => {
+              if (!yScale) return null;
+              const segs = computeRangeSegments(
+                metric,
+                yScale as (y: number) => number,
+                innerHeight
+              );
+              return (
+                <g style={{ pointerEvents: 'none' }}>
+                  {segs.map((s, i) => (
+                    <rect
+                      key={i}
+                      x={0}
+                      y={s.y}
+                      width={innerWidth}
+                      height={s.height}
+                      fill={s.color}
+                      opacity={0.22}
+                    />
+                  ))}
+                </g>
+              );
+            },
             'grid',
             'markers',
             'axes',
             'areas',
             'crosshair',
             'lines',
-            AnimatedPoints,
+            // Pass metric to points via closure wrapper to allow classification
+            props => <AnimatedPoints {...props} metric={metric} />,
             'slices',
             'mesh',
             'legends',
@@ -154,7 +179,7 @@ function MetricGraph({ metric }: { metric: Metric }) {
             },
           }}
           pointSize={10}
-          pointColor='#3B82F6'
+          pointColor='#617289'
           pointBorderWidth={2}
           pointBorderColor='#ffffff'
           pointLabelYOffset={-12}
@@ -167,7 +192,7 @@ function MetricGraph({ metric }: { metric: Metric }) {
               {point.data.displayValue}
             </div>
           )}
-          colors={['#3B82F6']}
+          colors={['#617289']}
           lineWidth={3}
           enableGridX={false}
           enableGridY={true}

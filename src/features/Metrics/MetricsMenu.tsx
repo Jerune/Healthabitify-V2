@@ -4,7 +4,7 @@ function MetricsMenu({ metrics, setMetric, activeMetric }: MetricsMenuProps) {
   const activeMetrics = metrics.map(metric => {
     return (
       <button
-        className={`w-full flex flex-row gap-2 justify-center items-center p-6 border border-gray-300 shadow-lg  hover:bg-palette-600 hover:text-white hover:transition-colors hover:underline cursor-pointer ${
+        className={`w-full flex flex-row gap-2 justify-center items-center p-6 border border-gray-300 shadow-lg  hover:bg-palette-600 hover:text-white hover:transition-colors hover:underline cursor-pointer text-ellipsis overflow-hidden whitespace-nowrap ${
           activeMetric.id === metric.id
             ? 'bg-palette-600 italic text-white underline'
             : 'bg-white'
@@ -15,9 +15,7 @@ function MetricsMenu({ metrics, setMetric, activeMetric }: MetricsMenuProps) {
           setMetric(metric);
         }}
       >
-        <h2 className='text-lg font-normal text-ellipsis overflow-hidden whitespace-nowrap'>
-          {metric.name}
-        </h2>
+        <h2 className='text-lg font-normal'>{metric.name}</h2>
       </button>
     );
   });
