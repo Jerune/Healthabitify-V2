@@ -186,7 +186,7 @@ function ManualDataGrid({ labs }: ManualDataProps) {
   }, []);
 
   if (isLoading) {
-    return <Loading size={50} />;
+    return <Loading />;
   }
 
   return (

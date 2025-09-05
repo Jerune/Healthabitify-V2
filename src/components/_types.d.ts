@@ -10,8 +10,3 @@ export type IconMapping = {
 export type IconProps = {
   iconId: string | unknown;
 };
-
-// Loading
-export type LoadingProps = {
-  size: number;
-};

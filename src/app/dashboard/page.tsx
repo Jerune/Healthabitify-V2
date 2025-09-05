@@ -56,7 +56,7 @@ function Dashboard() {
   }, [allAverages, activeTimeView, currentDateTime]);
 
   if (isLoading) {
-    return <Loading size={50} />;
+    return <Loading />;
   }
 
   if (!periodHasActiveData || !allAverages[`Y${year}`]) {
