@@ -1,5 +1,7 @@
 import type { LineCustomSvgLayerProps, LineSeries } from '@nivo/line';
+
 import type { Metric } from '../../types';
+
 import {
   DOT_COLORS,
   classifyByDelta,
@@ -25,13 +27,22 @@ export default function AnimatedPoints<Series extends LineSeries>({
         // Try range first when conditionsMode === 'range'; else delta vs previous point
         let dotColor = point.color;
         const seriesMetric: Metric | undefined = metric;
-        const yVal = toNumeric((point.data as any).y ?? point.data.yFormatted);
-        const prev =
-          idx > 0
-            ? toNumeric(
-                (arr[idx - 1].data as any).y ?? arr[idx - 1].data.yFormatted
-              )
-            : null;
+        const { y, yFormatted } =
+          (point.data as {
+            y?: number | string;
+            yFormatted?: number | string;
+          }) || {};
+        const yVal = toNumeric(y ?? yFormatted ?? 0);
+        let prev: number | null = null;
+        if (idx > 0) {
+          const prevData =
+            (arr[idx - 1].data as {
+              y?: number | string;
+              yFormatted?: number | string;
+            }) || {};
+          const prevRaw = prevData.y ?? prevData.yFormatted;
+          prev = prevRaw == null ? null : toNumeric(prevRaw);
+        }
         if (seriesMetric?.conditionsMode === 'range') {
           const cls = classifyByRange(seriesMetric, yVal);
           dotColor = DOT_COLORS[cls];
