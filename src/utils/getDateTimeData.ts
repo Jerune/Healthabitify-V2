@@ -34,9 +34,17 @@ function getShortDate(date: string): string {
   return shortDate;
 }
 
+function getMonthYearDate(date: string): string {
+  const DateTimeDate = getDateTimeDateFromDateString(date);
+  const monthyearDate = DateTimeDate.toFormat('MMM yyyy');
+
+  return monthyearDate;
+}
+
 export {
-  getDateTimeDateFromDateString,
   getDateTimeDataForDatapoints,
   getDateTimeDataForPreviousPeriod,
+  getDateTimeDateFromDateString,
+  getMonthYearDate,
   getShortDate,
 };

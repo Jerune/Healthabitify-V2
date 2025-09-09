@@ -1,6 +1,6 @@
 import { ColDef } from 'ag-grid-community';
 
-import { getShortDate } from '../../utils/getDateTimeData';
+import { getMonthYearDate, getShortDate } from '../../utils/getDateTimeData';
 
 async function buildManualColumns(
   dates: string[],
@@ -9,7 +9,7 @@ async function buildManualColumns(
   // Convert dates to AG Grid column definitions
   const dateColumns: ColDef[] = dates.map(date => ({
     field: date,
-    headerName: getShortDate(date),
+    headerName: labs ? getMonthYearDate(date) : getShortDate(date),
     headerClass: 'ag-header-cell-custom',
     cellClass: 'ag-cell-custom',
     sortable: false,

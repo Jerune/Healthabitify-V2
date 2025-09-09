@@ -8,6 +8,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 
 import Loading from '../../components/Loading';
+import { labDates } from '../../data/labTestDates';
 import labTestMetrics from '../../data/labTestMetrics';
 import getManualDatapointsByDate from '../../firebase/firestore/data-points/getManualDatapointsByDate';
 import { initAverages } from '../../redux/reducers/averagesReducer';
@@ -28,7 +29,7 @@ import updateManualDatapoints from './updateManualDatapoints';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
-function ManualDataGrid({ labs }: ManualDataProps) {
+function ManualDataGrid({ labs = false }: ManualDataProps) {
   const dispatch = useAppDispatch();
   const allMetrics = useAppSelector(state => state.metrics);
   const deviceData = useAppSelector(state => state.user.devices);
@@ -47,20 +48,6 @@ function ManualDataGrid({ labs }: ManualDataProps) {
   );
 
   const gridRef = useRef<AgGridReact>(null);
-
-  const labDates = [
-    '2018-07-04',
-    '2018-12-27',
-    '2019-06-27',
-    '2019-12-23',
-    '2020-07-31',
-    '2021-01-09',
-    '2021-07-21',
-    '2021-12-09',
-    '2022-09-05',
-    '2023-02-13',
-    '2023-11-07',
-  ];
 
   // Update column definitions when editForm changes
   const columnDefs = useMemo<ColDef[]>(() => {
@@ -228,9 +215,5 @@ function ManualDataGrid({ labs }: ManualDataProps) {
     </div>
   );
 }
-
-ManualDataGrid.defaultProps = {
-  labs: false,
-};
 
 export default ManualDataGrid;
