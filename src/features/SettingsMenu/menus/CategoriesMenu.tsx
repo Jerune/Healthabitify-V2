@@ -49,7 +49,7 @@ function CategoriesMenu({
 
   return (
     <section
-      className={`md:flex md:flex-col gap-4 md:w-72 lg:w-96 pb-4 mb-8 ${hideMenuOnMobile}`}
+      className={`w-full md:flex md:flex-col gap-4 md:w-72 lg:w-96 pb-4 mb-8 ${hideMenuOnMobile}`}
     >
       {categories}
     </section>
