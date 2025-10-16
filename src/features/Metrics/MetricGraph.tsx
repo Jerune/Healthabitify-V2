@@ -62,9 +62,14 @@ function MetricGraph({ metric }: { metric: Metric }) {
     );
   }
 
+  // Calculate a reasonable minimum width so the chart can scroll horizontally on mobile
+  const pointsCount = chartData.data.length;
+  const pixelsPerPoint = 64; // balance between readability and scroll distance
+  const minChartWidth = Math.max(pointsCount * pixelsPerPoint, 640);
+
   return (
-    <div className='w-full bg-white border border-gray-300 h-[calc(100vh-250px)]'>
-      <div className='h-full'>
+    <div className='w-full bg-white border border-gray-300 h-[calc(100vh-250px)] overflow-x-auto md:overflow-x-visible'>
+      <div className='h-full' style={{ minWidth: minChartWidth }}>
         <ResponsiveLine
           data={[chartData]}
           layers={[
