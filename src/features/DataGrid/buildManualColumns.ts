@@ -13,6 +13,7 @@ async function buildManualColumns(
     headerClass: 'ag-header-cell-custom',
     cellClass: 'ag-cell-custom',
     sortable: false,
+    minWidth: 100,
     filter: false,
     resizable: true,
     editable: false,
@@ -24,7 +25,7 @@ async function buildManualColumns(
       return cellData || '';
     },
     cellStyle: {
-      textAlign: 'left',
+      textAlign: 'center',
     },
     headerStyle: {
       fontStyle: 'italic',
@@ -39,6 +40,7 @@ async function buildManualColumns(
     cellClass: 'ag-cell-custom',
     sortable: false,
     filter: false,
+    minWidth: 200,
     resizable: true,
     editable: false,
     flex: 2,
