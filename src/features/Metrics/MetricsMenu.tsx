@@ -1,9 +1,11 @@
+import Link from 'next/link';
+
 import { MetricsMenuProps } from '../_types';
 
-function MetricsMenu({ metrics, setMetric, activeMetric }: MetricsMenuProps) {
+function MetricsMenu({ metrics, activeMetric }: MetricsMenuProps) {
   const activeMetrics = metrics.map(metric => {
     return (
-      <button
+      <Link
         className={`w-full flex flex-row gap-2 justify-center items-center px-6 py-2 md:p-6 border border-gray-300 shadow-lg  hover:bg-palette-600 hover:text-white hover:transition-colors hover:underline cursor-pointer text-ellipsis overflow-hidden whitespace-nowrap ${
           activeMetric.id === metric.id
             ? 'bg-palette-600 italic text-white underline'
@@ -11,12 +13,10 @@ function MetricsMenu({ metrics, setMetric, activeMetric }: MetricsMenuProps) {
         }`}
         type='button'
         key={metric.name}
-        onClick={() => {
-          setMetric(metric);
-        }}
+        href={`/metrics/${metric.categoryId}/${metric.id}`}
       >
         <h2 className='text-md md:text-lg font-normal'>{metric.name}</h2>
-      </button>
+      </Link>
     );
   });
 

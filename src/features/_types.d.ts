@@ -85,7 +85,6 @@ export type DashboardDataProps = {
 
 export type MetricsMenuProps = {
   metrics: Metric[];
-  setMetric: (metricId: Metric) => Promise<void>;
   activeMetric: Metric;
 };
 

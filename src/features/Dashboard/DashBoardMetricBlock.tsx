@@ -28,7 +28,7 @@ function DashBoardMetricBlock({ metric }: DashboardMetricProps) {
   }
 
   return (
-    <Link href={`/metrics/${metric.categoryId}`}>
+    <Link href={`/metrics/${metric.categoryId}/${metric.id}`}>
       <article
         className={`flex flex-col rounded-full justify-between py-12 px-10 w-72 h-72 shadow-2xl border border-black ${bgColorClass}`}
       >
