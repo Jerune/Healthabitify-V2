@@ -1,20 +1,18 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 
-import { onAuthStateChanged } from 'firebase/auth';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
 
 import buildAverages from '../features/AveragesManagement/buildAverages';
 import createAveragesForNewPeriods from '../features/AveragesManagement/createAveragesForNewPeriods';
 import getListWithNewPeriods from '../features/AveragesManagement/getListWithNewPeriods';
-import { auth } from '../firebase/firebase';
 import addDatapoints from '../firebase/firestore/data-points/addDatapoints';
 import getMetrics from '../firebase/firestore/metrics/getMetrics';
 import getWearables from '../firebase/firestore/wearables/getWearables';
 import { initAverages } from '../redux/reducers/averagesReducer';
 import { initMetrics } from '../redux/reducers/metricsReducer';
-import { localSignIn, setDevices } from '../redux/reducers/usersReducer';
+import { setDevices } from '../redux/reducers/usersReducer';
 import {
   changeLoadingMessage,
   changeLoadingStatus,
@@ -33,22 +31,6 @@ function AppStateInit() {
   const devices = useAppSelector(state => state.user.devices);
   const dispatch = useAppDispatch();
   const allMetrics = useAppSelector(state => state.metrics);
-
-  async function CheckIfUserIsAuthenticated() {
-    if (!isLoggedIn) {
-      onAuthStateChanged(auth, user => {
-        if (user) {
-          dispatch(
-            localSignIn({
-              email: user.email,
-              userId: user.uid,
-            })
-          );
-          return user;
-        }
-      });
-    }
-  }
 
   async function initializeMetrics() {
     dispatch(changeLoadingMessage('Loading user settings...'));
@@ -217,9 +199,6 @@ function AppStateInit() {
   }
 
   useEffect(() => {
-    if (!isLoggedIn) {
-      CheckIfUserIsAuthenticated();
-    }
     if (isLoggedIn) {
       initApp();
     }

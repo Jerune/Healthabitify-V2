@@ -9,7 +9,7 @@ import logo from '../assets/logo_1b.jpg';
 import LogoText from '../components/LogoText';
 import { auth } from '../firebase/firebase';
 import { localSignIn } from '../redux/reducers/usersReducer';
-import { useAppDispatch, useAppSelector } from '../redux/reduxHooks';
+import { useAppDispatch } from '../redux/reduxHooks';
 import type { FormSubmit, InputEvent, SignInData } from '../types';
 import { capitalizeFirstLetterFromArray } from '../utils/capitalizeFirstLetter';
 const IntroVideo = '/videos/login_video_alt.webm';
@@ -18,7 +18,6 @@ const IntroVideoMP4 = '/videos/login_video_alt.mp4';
 function Login() {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const isLoggedIn = useAppSelector(state => state.user.isLoggedIn);
   const rememberCheckbox = useRef<HTMLInputElement>(null);
   const [emailInLocalStorage, setEmailInLocalStorage] = useState<string | null>(
     null
@@ -118,12 +117,6 @@ function Login() {
       setErrorIsShowing(true);
     }
   }
-
-  useEffect(() => {
-    if (isLoggedIn) {
-      router.push('/dashboard');
-    }
-  }, [isLoggedIn, router]);
 
   return (
     <div className='h-screen w-screen overflow-hidden'>

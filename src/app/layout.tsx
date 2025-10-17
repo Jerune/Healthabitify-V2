@@ -3,6 +3,7 @@ import { Nanum_Myeongjo, Nunito, Oooh_Baby } from 'next/font/google';
 import { ToastContainer } from 'react-toastify';
 import './globals.css';
 
+import AuthGuard from '@/components/AuthGuard';
 import AuthListener from '@/components/AuthListener';
 import HeaderNav from '@/components/navigation/HeaderNav';
 
@@ -62,12 +63,12 @@ export default function RootLayout({
           limit={3}
         />
         <Provider>
-          <>
+          <AuthGuard>
             <HeaderNav />
             <AuthListener />
             {children}
             <ManualDataGridContainer />
-          </>
+          </AuthGuard>
         </Provider>
       </body>
     </html>
