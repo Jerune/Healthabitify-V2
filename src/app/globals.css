@@ -170,3 +170,10 @@ input:required:invalid {
 .react-date-picker__inputGroup {
   display: none !important;
 }
+
+/* MetricGraph responsive behavior */
+@media (min-width: 768px) {
+  .metric-chart-container {
+    min-width: 100% !important;
+  }
+}

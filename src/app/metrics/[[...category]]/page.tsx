@@ -47,7 +47,7 @@ function MetricsPage() {
       />
       <MainContent>
         {hasAnActiveMetric && (
-          <section className='w-full flex'>
+          <section className='w-full flex md:block'>
             <MetricGraph metric={selectedMetric} />
           </section>
         )}

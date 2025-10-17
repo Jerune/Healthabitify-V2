@@ -68,10 +68,16 @@ function MetricGraph({ metric }: { metric: Metric }) {
   const minChartWidth = Math.max(pointsCount * pixelsPerPoint, 640);
 
   return (
-    <div className='w-full bg-white border border-gray-300 h-[calc(100vh-250px)] overflow-x-auto md:overflow-x-visible'>
-      <div className='h-full' style={{ minWidth: minChartWidth }}>
+    <div className='w-full bg-white border border-gray-300 h-[calc(100vh-250px)] overflow-x-auto md:overflow-x-hidden md:max-w-full'>
+      <div
+        className='h-full w-full md:w-full md:max-w-full metric-chart-container'
+        style={{
+          minWidth: minChartWidth + 'px',
+        }}
+      >
         <ResponsiveLine
           data={[chartData]}
+          enableSlices={false}
           layers={[
             ({ innerWidth, innerHeight, yScale }) => {
               if (!yScale) return null;
