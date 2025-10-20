@@ -22,8 +22,6 @@ function MetricsPage() {
   const [selectedMetric, setSelectedMetric] = useState<Metric | null>(null);
   const hasAnActiveMetric = selectedMetric;
 
-  console.log(activeCategory, activeMetricFromUrl);
-
   useEffect(() => {
     if (activeCategory) {
       const metrics = getActiveMetrics(allMetrics, activeCategory);

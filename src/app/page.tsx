@@ -1,9 +1,14 @@
 'use client';
 
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import {
+  browserLocalPersistence,
+  browserSessionPersistence,
+  setPersistence,
+  signInWithEmailAndPassword,
+} from 'firebase/auth';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 
 import logo from '../assets/logo_1b.jpg';
 import LogoText from '../components/LogoText';
@@ -19,30 +24,12 @@ function Login() {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const rememberCheckbox = useRef<HTMLInputElement>(null);
-  const [emailInLocalStorage, setEmailInLocalStorage] = useState<string | null>(
-    null
-  );
   const [errorIsShowing, setErrorIsShowing] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
     password: '',
     errorMessage: '',
   });
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const storedEmail = localStorage.getItem('email');
-    setEmailInLocalStorage(storedEmail);
-    if (storedEmail) {
-      if (rememberCheckbox.current !== null) {
-        rememberCheckbox.current.checked = true;
-      }
-      setFormData(prev => ({
-        ...prev,
-        email: storedEmail,
-      }));
-    }
-  }, []);
 
   function handleChange(event: InputEvent) {
     if (errorIsShowing) setErrorIsShowing(false);
@@ -54,17 +41,6 @@ function Login() {
     });
   }
 
-  function handleLocalStorage() {
-    if (typeof window === 'undefined') return;
-    if (rememberCheckbox.current !== null) {
-      if (rememberCheckbox.current.checked) {
-        localStorage.setItem('email', formData.email);
-      } else if (emailInLocalStorage) {
-        localStorage.clear();
-      }
-    }
-  }
-
   async function handleSubmit(event: FormSubmit) {
     event.preventDefault();
     let SignInDbResponse: SignInData = {
@@ -72,6 +48,13 @@ function Login() {
       userId: '',
       errorMessage: '',
     };
+    // Set Firebase Auth persistence based on "Stay logged in" checkbox
+    await setPersistence(
+      auth,
+      rememberCheckbox.current?.checked
+        ? browserLocalPersistence
+        : browserSessionPersistence
+    );
     await signInWithEmailAndPassword(auth, formData.email, formData.password)
       .then(userCredential => {
         // Signed in
@@ -91,7 +74,6 @@ function Login() {
       });
 
     if (SignInDbResponse.userId) {
-      handleLocalStorage();
       dispatch(
         localSignIn({
           email: SignInDbResponse.email,
@@ -182,15 +164,15 @@ function Login() {
             <div className='flex items-center space-x-2'>
               <input
                 type='checkbox'
-                id='remember-me'
+                id='stay-logged-in'
                 className='h-4 w-4 rounded border-gray-300 text-primary-600 shadow-sm focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 focus:ring-offset-0 disabled:cursor-not-allowed disabled:text-gray-400'
                 ref={rememberCheckbox}
               />
               <label
-                htmlFor='remember-me'
+                htmlFor='stay-logged-in'
                 className='text-sm font-medium text-gray-700'
               >
-                Remember me
+                Stay logged in
               </label>
             </div>
             <button

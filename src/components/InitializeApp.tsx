@@ -199,7 +199,7 @@ function AppStateInit() {
   }
 
   useEffect(() => {
-    if (isLoggedIn && !allMetrics && !devices) {
+    if (isLoggedIn && allMetrics.length === 1) {
       initApp();
     }
   }, [isLoggedIn]);
