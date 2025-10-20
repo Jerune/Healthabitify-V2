@@ -9,15 +9,6 @@ export async function GET(
   const baseUrl = 'https://api.fitbit.com/1';
   const upstreamUrl = new URL(`${baseUrl}/${path}${new URL(req.url).search}`);
 
-  console.log(
-    'Fitbit API proxy - Path:',
-    path,
-    'Base URL:',
-    baseUrl,
-    'Full URL:',
-    upstreamUrl.toString()
-  );
-
   // Read access token from cookie set during OAuth callback
   const cookieHeader = req.headers.get('cookie') || '';
   const cookies = Object.fromEntries(
@@ -27,8 +18,6 @@ export async function GET(
       .map(([k, ...v]) => [k, decodeURIComponent(v.join('='))])
   ) as Record<string, string>;
   const accessToken = cookies['fitbit_access_token'];
-
-  console.log('Fitbit access token present:', !!accessToken);
 
   // Allow Authorization header as fallback for testing
   const headerAuth = req.headers.get('authorization');
@@ -51,8 +40,6 @@ export async function GET(
     },
     cache: 'no-store',
   });
-
-  console.log('Fitbit API response status:', upstreamResponse.status);
 
   return new Response(upstreamResponse.body, {
     status: upstreamResponse.status,
