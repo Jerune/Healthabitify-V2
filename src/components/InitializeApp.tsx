@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 import buildAverages from '../features/AveragesManagement/buildAverages';
 import createAveragesForNewPeriods from '../features/AveragesManagement/createAveragesForNewPeriods';
 import getListWithNewPeriods from '../features/AveragesManagement/getListWithNewPeriods';
+import addActivities from '../firebase/firestore/activities/addActivities';
 import addDatapoints from '../firebase/firestore/data-points/addDatapoints';
 import getMetrics from '../firebase/firestore/metrics/getMetrics';
 import getWearables from '../firebase/firestore/wearables/getWearables';
@@ -18,11 +19,13 @@ import {
   changeLoadingStatus,
 } from '../redux/reducers/utilsReducer';
 import { useAppDispatch, useAppSelector } from '../redux/reduxHooks';
+import extractFitbitActivities from '../services/fitbitAPI/extractFitbitActivities';
 import transformFitbitData from '../services/fitbitAPI/transformFitbitData';
 import getApiData from '../services/getApiData';
 import transformBatchedOuraData from '../services/ouraAPI/transformBatchedOuraData';
 import transformOuraData from '../services/ouraAPI/transformOuraData';
 import { DataPoint, FitbitRawData, OuraRawData } from '../types';
+//import { getYesterdaysDateAsString } from '../utils/getDatesAsString';
 import { getYesterdaysDateAsString } from '../utils/getDatesAsString';
 import { getDateTimeDataForPreviousPeriod } from '../utils/getDateTimeData';
 
@@ -70,10 +73,14 @@ function AppStateInit() {
       if (typeof fitbitDataFromAPI !== 'string') {
         // Set loading message
         dispatch(changeLoadingMessage('Transforming Fitbit data'));
+
+        // </------- FITBIT DATAPOINTS FROM SUMMARY -------------/>
+
         // Transforms Fitbit data to a readable format if new data is returned
         const newFitbitDatapoints =
           await transformFitbitData(fitbitDataFromAPI);
-        // Adds new datapoints to database
+
+        //Adds new datapoints to database
         if (newFitbitDatapoints.length > 0) {
           const newDataPromises = newFitbitDatapoints.map(async datapoint => {
             const amountOfNewDatapoints = await addDatapoints(datapoint);
@@ -90,6 +97,25 @@ function AppStateInit() {
           // Sends update on added datapoints
           toast.success(
             `${totalAmountOfNewDatapoints} new Fitbit datapoints have been added`
+          );
+        }
+
+        // </------- FITBIT ACTIVITIES -------------/>
+
+        // Set loading message
+        dispatch(changeLoadingMessage('Extracting activity data'));
+
+        const newFitbitActivities =
+          await extractFitbitActivities(fitbitDataFromAPI);
+
+        //Adds new activities to database
+        if (newFitbitActivities.length > 0) {
+          const amountOfNewDatapoints =
+            await addActivities(newFitbitActivities);
+
+          // Sends update on added activities
+          toast.success(
+            `${amountOfNewDatapoints} new activities have been added`
           );
         }
       } else if (fitbitDataFromAPI === 'error') {
@@ -125,15 +151,11 @@ function AppStateInit() {
         }
 
         if (newOuraDatapoints.length > 0) {
-          console.log('Adding Oura datapoints to database...');
           const amountOfNewDatapoints = await addDatapoints(newOuraDatapoints);
-          console.log('Oura datapoints added:', amountOfNewDatapoints);
 
           toast.success(
             `${amountOfNewDatapoints} new Oura datapoints have been added`
           );
-        } else {
-          console.log('No new Oura datapoints to add');
         }
       } else if (
         ouraDataFromAPI[0] === 'error' ||
