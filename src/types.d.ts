@@ -93,20 +93,117 @@ export type DataPoint = {
   year: number;
 };
 
+export type Activity = {
+  userId: string;
+  logId: number;
+  date: string;
+  weekNumber: number;
+  month: number;
+  year: number;
+  activityTypeId: number;
+  date: string;
+  activityName: string;
+  activeDuration: string;
+  duration: string;
+  calories: number;
+  averageHeartRate: number;
+  steps: number;
+  cardioZone: number;
+  fatBurnZone: number;
+  peakZone: number;
+};
+
 // Fitbit Data
 
 type HeartRateZoneData = {
-  heartRateZones: [
-    {
-      name: string;
-      minutes: number;
-    },
-  ];
+  heartRateZones: ZoneData[];
+};
+
+type HeartRateZone = {
+  minutes: number;
+  caloriesOut: 56.29404;
+  name: string;
+  min: number;
+  max: number;
+};
+
+type MinutesInHeartRateZone = {
+  minutes: number;
+  zoneName: string;
+  order: number;
+  type: string;
+  minuteMultiplier: number;
+};
+
+type ZoneData = {
+  name: string;
+  minutes: number;
+};
+
+type ActivityData = {
+  logId: number;
+  activityTypeId: number;
+  activityName: string;
+  calories: number;
+  distance: number;
+  steps: number;
+  speed: number;
+  pace: number;
+  averageHeartRate: number;
+  duration: number;
+  activeDuration: number;
+  activityLevel: ZoneData[];
+  distanceUnit: 'Kilometer';
+  source: {
+    type: 'tracker';
+    name: 'Charge 6';
+    id: '2150ADDD4442';
+    url: 'https://www.fitbit.com/';
+    trackerFeatures: ['DISTANCE', 'STEPS', 'CALORIES', 'HEARTRATE'];
+  };
+  logType: 'auto_detected' | 'tracker';
+  manualValuesSpecified: {
+    calories: false;
+    distance: false;
+    steps: false;
+  };
+  intervalWorkoutData: {
+    intervalSummaries: [];
+    numRepeats: 0;
+  };
+  heartRateZones: HeartRateZone[];
+  activeZoneMinutes: {
+    totalMinutes: number;
+    minutesInHeartRateZones: MinutesInHeartRateZone[];
+  };
+  inProgress: false;
+  caloriesLink: string;
+  heartRateLink: string;
+  tcxLink: string;
+  lastModified: string;
+  startTime: string;
+  originalStartTime: string;
+  originalDuration: number;
+  elevationGain: number;
+  hasActiveZoneMinutes: boolean;
+  cl: 10.041035713255823;
 };
 
 export type FitbitData = {
   dateTime: string;
   value: string | HeartRateZoneData;
+};
+
+export type FitbitActivityData = {
+  pagination: {
+    afterDate: string;
+    limit: number;
+    next: string;
+    offset: number;
+    previous: string;
+    sort: 'desc' | 'asc';
+  };
+  activities: ActivityData[];
 };
 
 export type FitbitRawData = {
