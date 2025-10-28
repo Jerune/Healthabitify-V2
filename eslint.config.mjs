@@ -30,7 +30,7 @@ const eslintConfig = [
       'react/react-in-jsx-scope': 'off',
 
       // General code quality rules
-      'no-console': 'off', // Allow console.log for development
+      'no-console': 'off',
       'no-debugger': 'error',
       'no-unused-expressions': 'error',
       'prefer-const': 'error',

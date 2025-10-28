@@ -72,12 +72,5 @@ export async function GET() {
   authUrl.searchParams.set('redirect_uri', redirectUri);
   authUrl.searchParams.set('state', state);
 
-  console.log('Oura Authorization URL Debug:', {
-    finalScope: scope,
-    authUrl: authUrl.toString(),
-    scopeParam: authUrl.searchParams.get('scope'),
-    scopeInUrl: authUrl.toString().includes('scope='),
-  });
-
   return res;
 }

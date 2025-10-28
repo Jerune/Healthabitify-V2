@@ -51,7 +51,6 @@ export async function GET(req: Request) {
   }
 
   const tokenJson = await tokenRes.json();
-  console.log('Oura token response:', JSON.stringify(tokenJson, null, 2));
 
   const accessToken = tokenJson.access_token;
   const refreshToken = tokenJson.refresh_token;

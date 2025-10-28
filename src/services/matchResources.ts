@@ -6,6 +6,7 @@ export default function matchServiceResourcesWithMetricNames(
 
   if (source === 'fitbit') {
     const shortenedResource = resource.split('-').slice(1, 2).join();
+
     switch (shortenedResource) {
       case 'activityCalories':
         dbMetricName = 'total-average-calorie-burn';

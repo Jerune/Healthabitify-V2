@@ -15,13 +15,6 @@ export async function POST(request: NextRequest) {
     const ouraClientId = process.env.OURA_CLIENT_ID;
     const ouraClientSecret = process.env.OURA_CLIENT_SECRET;
 
-    console.log('Environment variables check:', {
-      fitbitClientId: fitbitClientId ? 'present' : 'missing',
-      fitbitClientSecret: fitbitClientSecret ? 'present' : 'missing',
-      ouraClientId: ouraClientId ? 'present' : 'missing',
-      ouraClientSecret: ouraClientSecret ? 'present' : 'missing',
-    });
-
     // Validate required environment variables
     if (
       !fitbitClientId ||
@@ -37,10 +30,8 @@ export async function POST(request: NextRequest) {
     }
 
     const { platform } = await request.json();
-    console.log('Refresh token request for platform:', platform);
 
     if (!platform || (platform !== 'fitbit' && platform !== 'oura')) {
-      console.log('Invalid platform:', platform);
       return NextResponse.json({ error: 'Invalid platform' }, { status: 400 });
     }
 
@@ -56,21 +47,8 @@ export async function POST(request: NextRequest) {
 
     if (platform === 'fitbit') {
       const refreshToken = wearablesData.fitbit?.refreshToken;
-      console.log('Fitbit refresh token present:', !!refreshToken);
-      console.log(
-        'Fitbit refresh token value:',
-        refreshToken ? refreshToken.substring(0, 20) + '...' : 'missing'
-      );
-      console.log(
-        'Fitbit refresh token length:',
-        refreshToken ? refreshToken.length : 0
-      );
-      console.log('Fitbit refresh token full value:', refreshToken);
 
       if (!refreshToken) {
-        console.log(
-          'No Fitbit refresh token found in database - redirecting to re-authorization'
-        );
         return NextResponse.json(
           {
             error: 'No refresh token available',
@@ -83,12 +61,10 @@ export async function POST(request: NextRequest) {
       }
 
       try {
-        console.log('Calling refreshFitbitToken...');
         const tokens = await refreshFitbitToken(refreshToken);
 
         // Update Firebase with new token
         try {
-          console.log('Updating Firebase with new Fitbit token');
           await updateWearables('fitbit', 'token', tokens.access_token);
 
           // Also update the refresh token in the database
@@ -98,10 +74,7 @@ export async function POST(request: NextRequest) {
               'refreshToken',
               tokens.refresh_token
             );
-            console.log('Fitbit refresh token updated in database');
           }
-
-          console.log('Firebase update successful');
         } catch (error) {
           console.error('Failed to update Fitbit token in Firebase:', error);
         }
@@ -147,21 +120,8 @@ export async function POST(request: NextRequest) {
       }
     } else if (platform === 'oura') {
       const refreshToken = wearablesData.oura?.refreshToken;
-      console.log('Oura refresh token present:', !!refreshToken);
-      console.log(
-        'Oura refresh token value:',
-        refreshToken ? refreshToken.substring(0, 20) + '...' : 'missing'
-      );
-      console.log(
-        'Oura refresh token length:',
-        refreshToken ? refreshToken.length : 0
-      );
-      console.log('Oura refresh token full value:', refreshToken);
 
       if (!refreshToken) {
-        console.log(
-          'No Oura refresh token found in database - redirecting to re-authorization'
-        );
         return NextResponse.json(
           {
             error: 'No refresh token available',
@@ -174,25 +134,16 @@ export async function POST(request: NextRequest) {
       }
 
       try {
-        console.log('Calling refreshOuraToken...');
         const tokens = await refreshOuraToken(refreshToken);
-        console.log('Oura token refresh successful, tokens received:', {
-          access_token: tokens.access_token ? 'present' : 'missing',
-          refresh_token: tokens.refresh_token ? 'present' : 'missing',
-        });
 
         // Update Firebase with new token
         try {
-          console.log('Updating Firebase with new Oura token');
           await updateWearables('oura', 'token', tokens.access_token);
 
           // Also update the refresh token in the database
           if (tokens.refresh_token) {
             await updateWearables('oura', 'refreshToken', tokens.refresh_token);
-            console.log('Oura refresh token updated in database');
           }
-
-          console.log('Firebase update successful');
         } catch (error) {
           console.error('Failed to update Oura token in Firebase:', error);
         }

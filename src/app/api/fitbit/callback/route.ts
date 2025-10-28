@@ -56,7 +56,6 @@ export async function GET(req: Request) {
   }
 
   const tokenJson = await tokenRes.json();
-  console.log('Fitbit token response:', JSON.stringify(tokenJson, null, 2));
 
   const accessToken = tokenJson.access_token as string;
   const refreshToken = tokenJson.refresh_token as string;

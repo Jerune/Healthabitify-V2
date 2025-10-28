@@ -55,13 +55,6 @@ export function getWeeklyChartData(
   const metricId = kebabcaseToCamelcase(metric.id);
   const data: ChartDataPoint[] = [];
 
-  console.log('getWeeklyChartData Debug:', {
-    rowsLength: rows.length,
-    metricId,
-    metricName: metric.name,
-    firstRow: rows[0],
-  });
-
   rows.forEach(row => {
     const value = row[metricId];
     if (value !== undefined && value !== '---' && value !== 'null') {
@@ -71,11 +64,6 @@ export function getWeeklyChartData(
         displayValue: String(value),
       });
     }
-  });
-
-  console.log('getWeeklyChartData Result:', {
-    dataLength: data.length,
-    data,
   });
 
   return {

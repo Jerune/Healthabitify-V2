@@ -16,8 +16,6 @@ export default async function transformOuraData(
   const datapointsToAdd: DataPoint[] = [];
   const source = 'oura';
 
-  console.log(ouraRawData);
-
   // Handle different Oura response types
   ouraRawData.data.forEach(resource => {
     // Handle OuraDailySummary (sleep data)

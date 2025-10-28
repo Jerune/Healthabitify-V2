@@ -44,13 +44,6 @@ export async function GET() {
   authUrl.searchParams.set('redirect_uri', redirectUri);
   authUrl.searchParams.set('state', state);
 
-  console.log('Fitbit Authorization URL Debug:', {
-    finalScope: scope,
-    authUrl: authUrl.toString(),
-    scopeParam: authUrl.searchParams.get('scope'),
-    scopeInUrl: authUrl.toString().includes('scope='),
-  });
-
   const res = NextResponse.redirect(authUrl.toString());
 
   // Store PKCE verifier and state in cookies for callback
