@@ -1,7 +1,7 @@
 import metricsInMilliseconds from '../../data/metrics/metricsInMilliseconds';
 import metricsWithZeroValues from '../../data/metrics/metricsWithZeroValues';
 import { Metric } from '../../types';
-import convertMillisecondsToTime from '../../utils/convertMillisecondsToTime';
+import { convertMillisecondsToTime } from '../../utils/convertMillisecondsToTime';
 import forceNumberReturn from '../../utils/forceNumberReturn';
 
 import addDecimals from './addDecimals';

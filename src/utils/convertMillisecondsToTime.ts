@@ -9,4 +9,19 @@ function convertMillisecondsToTime(timeInMilliseconds: number) {
   return `${hoursAsString}:${minutesAsString}`;
 }
 
-export default convertMillisecondsToTime;
+function convertMillisecondsToDuration(milliseconds: number) {
+  // Convert milliseconds to total minutes
+  const totalMinutes = Math.floor(milliseconds / 60000); // 1 minute = 60,000 ms
+
+  // Calculate hours and remaining minutes
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+
+  // Format with leading zeros
+  const formattedHours = String(hours);
+  const formattedMinutes = String(minutes).padStart(2, '0');
+
+  return `${formattedHours}:${formattedMinutes}`;
+}
+
+export { convertMillisecondsToDuration, convertMillisecondsToTime };

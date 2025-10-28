@@ -1,7 +1,7 @@
 import metricsInMilliseconds from '../../data/metrics/metricsInMilliseconds';
 import metricsWithStringOutput from '../../data/metrics/metricsWithStringOutput';
 import metricsWithZeroValues from '../../data/metrics/metricsWithZeroValues';
-import convertMillisecondsToTime from '../../utils/convertMillisecondsToTime';
+import { convertMillisecondsToTime } from '../../utils/convertMillisecondsToTime';
 import forceNumberReturn from '../../utils/forceNumberReturn';
 import { DashboardMetric } from '../_types';
 
