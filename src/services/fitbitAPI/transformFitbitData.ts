@@ -1,12 +1,22 @@
-import { DataPoint, FitbitData, FitbitRawData } from '../../types';
+import {
+  DataPoint,
+  FitbitActivityData,
+  FitbitData,
+  FitbitRawData,
+} from '../../types';
 import { getDateTimeDataForDatapoints } from '../../utils/getDateTimeData';
 import matchServiceResourcesWithMetricNames from '../matchResources';
 
-export default function transformFitbitData(fitbitData: FitbitRawData[]) {
+export default function transformFitbitData(
+  fitbitData: (FitbitRawData | FitbitActivityData)[]
+) {
   const source = 'fitbit';
 
-  console.log(fitbitData);
-  const datapointsToAdd = fitbitData.map(datapointsCollection => {
+  const fitbitDirectDatapoints = fitbitData.filter(
+    datapointsCollection => Object.keys(datapointsCollection).length === 1
+  ) as FitbitRawData[];
+
+  const datapointsToAdd = fitbitDirectDatapoints.map(datapointsCollection => {
     const resourceNameFromAPI = Object.keys(datapointsCollection)[0];
     const metric = matchServiceResourcesWithMetricNames(
       source,

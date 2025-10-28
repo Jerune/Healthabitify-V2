@@ -21,6 +21,7 @@ function getSourceData(source: string) {
         'minutesSedentary',
         'heart',
         'restingHeartRate',
+        'list',
       ];
       break;
     default:

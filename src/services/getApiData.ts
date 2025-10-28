@@ -93,10 +93,14 @@ export default async function getApiData(
 
   function getEndpoints({ start, end }: EndpointsDates) {
     const endpoints = resources.map(resource => {
-      const url =
-        source === 'oura'
-          ? `/api/oura/usercollection/${resource}?start_date=${start}&end_date=${end}`
-          : `/api/fitbit/user/-/activities/${resource}/date/${start}/${end}.json`;
+      let url = '';
+      if (source === 'oura') {
+        url = `/api/oura/usercollection/${resource}?start_date=${start}&end_date=${end}`;
+      } else if (source === 'fitbit' && resource === 'list') {
+        url = `/api/fitbit/user/-/activities/list.json?afterDate=${start}&sort=dec&offset=0&limit=500`;
+      } else {
+        url = `/api/fitbit/user/-/activities/${resource}/date/${start}/${end}.json`;
+      }
       return {
         url,
       };
