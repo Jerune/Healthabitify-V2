@@ -1,6 +1,6 @@
 import { collection, getDocs, query, where } from 'firebase/firestore';
 
-import { DataPoint, DocumentsToKeep } from '../../types';
+import { Activity, DataPoint, DocumentsToKeep } from '../../types';
 import { db } from '../firebase';
 
 async function getDocsFromCollectionBasedOnString(
@@ -70,8 +70,28 @@ async function documentDoesNotExistAlready(datapoint: DataPoint) {
   return true;
 }
 
+async function activityDoesNotExistAlready(activity: Activity) {
+  const q = query(
+    collection(db, 'activities'),
+    where('logId', '==', activity.logId)
+  );
+
+  const existingDocuments = [];
+  const querySnapshot = await getDocs(q);
+  querySnapshot.forEach(doc => {
+    existingDocuments.push(doc.data());
+  });
+
+  if (existingDocuments.length > 0) {
+    return false;
+  }
+
+  return true;
+}
+
 export {
-  getDocsFromCollectionBasedOnString,
-  getAllDocsFromCollection,
+  activityDoesNotExistAlready,
   documentDoesNotExistAlready,
+  getAllDocsFromCollection,
+  getDocsFromCollectionBasedOnString,
 };
