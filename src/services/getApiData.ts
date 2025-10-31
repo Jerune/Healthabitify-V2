@@ -98,6 +98,8 @@ export default async function getApiData(
         url = `/api/oura/usercollection/${resource}?start_date=${start}&end_date=${end}`;
       } else if (source === 'fitbit' && resource === 'list') {
         url = `/api/fitbit/user/-/activities/list.json?afterDate=${start}&sort=dec&offset=0&limit=500`;
+      } else if (source === 'fitbit' && resource === 'cardioscore') {
+        url = `/api/fitbit/user/-/cardioscore/date/${start}/${end}.json`;
       } else {
         url = `/api/fitbit/user/-/activities/${resource}/date/${start}/${end}.json`;
       }

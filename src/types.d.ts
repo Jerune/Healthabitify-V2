@@ -115,8 +115,15 @@ export type Activity = {
 
 // Fitbit Data
 
+type Vo2maxData = {
+  vo2Max: string;
+};
+
 type HeartRateZoneData = {
-  heartRateZones: ZoneData[];
+  activeZoneMinutes: number;
+  fatBurnActiveZoneMinutes?: number;
+  cardioActiveZoneMinutes?: number;
+  peakActiveZoneMinutes?: number;
 };
 
 type HeartRateZone = {
@@ -191,7 +198,7 @@ type ActivityData = {
 
 export type FitbitData = {
   dateTime: string;
-  value: string | HeartRateZoneData;
+  value: string | HeartRateZoneData | Vo2maxData;
 };
 
 export type FitbitActivityData = {
@@ -338,6 +345,8 @@ export type DocumentsToKeep = {
 
 // Redux
 
+export type ActiveTimeView = 'week' | 'year' | 'month';
+
 export type CurrentDateTime = {
   currentDate: string;
   lastDayOfTheWeek: string;
@@ -345,6 +354,15 @@ export type CurrentDateTime = {
   month: number;
   weekNumber: number;
   year: number;
+};
+
+export type Utils = {
+  isLoading: boolean;
+  loadingMessage: string;
+  sideNavOpen: boolean;
+  manualDataGridOpen: boolean;
+  activeTimeView: ActiveTimeView;
+  currentDateTime: CurrentDateTime;
 };
 
 export type Device = {

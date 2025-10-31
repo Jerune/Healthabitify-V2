@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { DateTime } from 'luxon';
 
+import { Utils } from '../../types';
 import { getSpecifiedDateAsString } from '../../utils/getDatesAsString';
 
 // setting initial time values
@@ -15,7 +16,7 @@ const currentDateTime = {
 };
 
 // Initial State
-const utils = {
+const utils: Utils = {
   isLoading: true,
   loadingMessage: '',
   sideNavOpen: false,

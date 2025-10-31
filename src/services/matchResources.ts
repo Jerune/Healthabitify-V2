@@ -5,7 +5,9 @@ export default function matchServiceResourcesWithMetricNames(
   let dbMetricName = '';
 
   if (source === 'fitbit') {
-    const shortenedResource = resource.split('-').slice(1, 2).join();
+    const shortenedResource = resource.includes('activities')
+      ? resource.split('-').slice(1, 2).join()
+      : resource;
 
     switch (shortenedResource) {
       case 'activityCalories':
@@ -14,7 +16,7 @@ export default function matchServiceResourcesWithMetricNames(
       case 'steps':
         dbMetricName = 'steps';
         break;
-      case 'heart':
+      case 'active':
         dbMetricName = 'heartrate-zones';
         break;
       case 'minutesSedentary':
@@ -22,6 +24,9 @@ export default function matchServiceResourcesWithMetricNames(
         break;
       case 'restingHeartRate':
         dbMetricName = 'daily-average-heart-rate';
+        break;
+      case 'cardioScore':
+        dbMetricName = 'vo2-max';
         break;
       default:
         dbMetricName = '';
@@ -54,9 +59,6 @@ export default function matchServiceResourcesWithMetricNames(
         break;
       case 'spo2_percentage':
         dbMetricName = 'blood-oxygen';
-        break;
-      case 'vo2_max':
-        dbMetricName = 'vo2-max';
         break;
       case 'vascular_age':
         dbMetricName = 'cardiovascular-age';

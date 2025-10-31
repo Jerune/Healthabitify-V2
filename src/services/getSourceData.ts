@@ -10,7 +10,6 @@ function getSourceData(source: string) {
         'daily_stress',
         'daily_cardiovascular_age',
         'daily_spo2',
-        'vO2_max',
       ];
       break;
     case 'fitbit':
@@ -19,8 +18,9 @@ function getSourceData(source: string) {
         'activityCalories',
         'steps',
         'minutesSedentary',
-        'heart',
+        'active-zone-minutes',
         'restingHeartRate',
+        'cardioscore',
         'list',
       ];
       break;
