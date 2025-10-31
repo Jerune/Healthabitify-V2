@@ -1,6 +1,6 @@
 import type { Metric } from '../../types';
 
-export const BAND_COLORS = {
+const BAND_COLORS = {
   good: '#B7E2CD',
   medium: '#FDE5CE',
   bad: '#F4CCCD',
