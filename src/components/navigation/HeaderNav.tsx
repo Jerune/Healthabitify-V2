@@ -121,6 +121,16 @@ function HeaderNav() {
           </button>
           <span className='text-xl'>Dashboard</span>
         </Link>
+        <Link
+          href='/activities'
+          className='flex flex-row items-center gap-3 py-2'
+          onClick={() => dispatch(toggleMenu())}
+        >
+          <button type='button' className='text-2xl'>
+            <Icon iconId='GiTennisBall' />
+          </button>
+          <span className='text-xl'>Activities</span>
+        </Link>
         <div>{menuCategories}</div>
         <div className='mt-6'>
           <Link

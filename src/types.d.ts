@@ -101,7 +101,6 @@ export type Activity = {
   month: number;
   year: number;
   activityTypeId: number;
-  date: string;
   activityName: string;
   activeDuration: string;
   duration: string;
