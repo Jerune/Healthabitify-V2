@@ -24,4 +24,12 @@ function convertMillisecondsToDuration(milliseconds: number) {
   return `${formattedHours}:${formattedMinutes}`;
 }
 
-export { convertMillisecondsToDuration, convertMillisecondsToTime };
+function convertDateToMilliseconds(dateString: string) {
+  return new Date(dateString).getTime();
+}
+
+export {
+  convertDateToMilliseconds,
+  convertMillisecondsToDuration,
+  convertMillisecondsToTime,
+};

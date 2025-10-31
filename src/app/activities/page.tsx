@@ -8,6 +8,7 @@ import DashBoardContainer from '../../features/Dashboard/DashBoardContainer';
 import getActivities from '../../firebase/firestore/activities/getActivities';
 import { useAppSelector } from '../../redux/reduxHooks';
 import { Activity } from '../../types';
+import { convertDateToMilliseconds } from '../../utils/convertMillisecondsToTime';
 
 export default function ActivitiesPage() {
   const currentDateTime = useAppSelector(state => state.utils.currentDateTime);
@@ -24,7 +25,11 @@ export default function ActivitiesPage() {
       month,
       year,
     });
-    setActivities(newActivities);
+    const sortedActivities = newActivities.sort(
+      (a, b) =>
+        convertDateToMilliseconds(a.date) - convertDateToMilliseconds(b.date)
+    );
+    setActivities(sortedActivities);
     setIsLoading(false);
   }, [activeTimeView, weekNumber, month, year, setActivities]);
 
