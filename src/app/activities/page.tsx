@@ -1,30 +1,44 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import Loading from '../../components/Loading';
+import ActivityCard from '../../features/Activities/ActivityCard';
+import DashBoardContainer from '../../features/Dashboard/DashBoardContainer';
+import getActivities from '../../firebase/firestore/activities/getActivities';
 import { useAppSelector } from '../../redux/reduxHooks';
 import { Activity } from '../../types';
 
 export default function ActivitiesPage() {
-  const activeTimeView = useAppSelector(state => state.utils.activeTimeView);
   const currentDateTime = useAppSelector(state => state.utils.currentDateTime);
+  const activeTimeView = useAppSelector(state => state.utils.activeTimeView);
   const { weekNumber, month, year } = currentDateTime;
-  const [activities, setActivities] = useState<Activity[] | null>(null);
-  const hasSelectedPeriod = activeTimeView && weekNumber && month && year;
+  const hasActivePeriod = activeTimeView && weekNumber && month && year;
+  const [isLoading, setIsLoading] = useState(false);
+  const [activities, setActivities] = useState<Activity[]>([]);
+
+  const handleActivities = useCallback(async () => {
+    setIsLoading(true);
+    const newActivities = await getActivities(activeTimeView, {
+      weekNumber,
+      month,
+      year,
+    });
+    setActivities(newActivities);
+    setIsLoading(false);
+  }, [activeTimeView, weekNumber, month, year, setActivities]);
 
   useEffect(() => {
-    if (hasSelectedPeriod) {
-      // Get activities from DB
-      setActivities([]);
+    if (activeTimeView && weekNumber && month && year) {
+      handleActivities();
     }
-  }, [hasSelectedPeriod]);
+  }, [handleActivities, activeTimeView, weekNumber, month, year]);
 
-  if (!activities) {
+  if (isLoading) {
     return <Loading />;
   }
 
-  if (activities.length < 1) {
+  if (!hasActivePeriod || activities.length < 1) {
     return (
       <section className='w-full pt-4 px-[5%] md:px-0 md:pt-16 flex flex-col justify-center md:justify-top items-center'>
         <h1 className='text-xl italic'>
@@ -34,5 +48,9 @@ export default function ActivitiesPage() {
     );
   }
 
-  return <div>page</div>;
+  const activityCards = activities.map(activity => (
+    <ActivityCard key={activity.logId} {...activity} />
+  ));
+
+  return <DashBoardContainer>{activityCards}</DashBoardContainer>;
 }
